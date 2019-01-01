@@ -1,6 +1,71 @@
 // aframe-shader-buildings.js - boxy buildings using a fast shader for A-Frame WebXR
 // Copyright © 2019 by P. Douglas Reeder under the MIT License
 
+AFRAME.registerGeometry('ell', {
+    schema: {
+        xSections: {type: 'number', default: 4},
+        xThickness: {type: 'number', default: 2},
+        xProportion: {type: 'number', default: 5},
+
+        zSections: {type: 'number', default: 2},
+        zThickness: {type: 'number', default: 1},
+        zProportion: {type: 'number', default: 5},
+
+        ySections: {type: 'number', default: 1},
+        yProportion: {type: 'number', default: 4},
+    },
+    init: function (data) {
+        var geometry = new THREE.Geometry();
+
+        let xProportion = data.xProportion;
+        let zProportion = data.zProportion;
+
+        let xWingLength = (data.xSections - data.xThickness) * xProportion;
+        let xWingThickness = data.zThickness * zProportion;
+        let zWingLength = (data.zSections - data.zThickness) * zProportion;
+        let zWingThickness = data.xThickness * xProportion;
+
+        let yHeight = data.ySections * data.yProportion;
+        geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        geometry.vertices.push(new THREE.Vector3(xWingLength, 0, 0));
+        geometry.vertices.push(new THREE.Vector3(xWingLength, 0, -xWingThickness));
+        geometry.vertices.push(new THREE.Vector3(-zWingThickness, 0, -xWingThickness));
+        geometry.vertices.push(new THREE.Vector3(-zWingThickness, 0, zWingLength));
+        geometry.vertices.push(new THREE.Vector3(0, 0, zWingLength));
+        geometry.vertices.push(new THREE.Vector3(0, yHeight, 0));
+        geometry.vertices.push(new THREE.Vector3(xWingLength, yHeight, 0));
+        geometry.vertices.push(new THREE.Vector3(xWingLength, yHeight, -xWingThickness));
+        geometry.vertices.push(new THREE.Vector3(-zWingThickness, yHeight, -xWingThickness));
+        geometry.vertices.push(new THREE.Vector3(-zWingThickness, yHeight, zWingLength));
+        geometry.vertices.push(new THREE.Vector3(0, yHeight, zWingLength));
+        geometry.computeBoundingBox();
+
+        geometry.faces.push(new THREE.Face3(0, 1, 7));
+        geometry.faces.push(new THREE.Face3(0, 7, 6));
+        geometry.faces.push(new THREE.Face3(1, 2, 8));
+        geometry.faces.push(new THREE.Face3(1, 8, 7));
+        geometry.faces.push(new THREE.Face3(2, 3, 9));
+        geometry.faces.push(new THREE.Face3(2, 9, 8));
+        geometry.faces.push(new THREE.Face3(3, 4, 10));
+        geometry.faces.push(new THREE.Face3(3, 10, 9));
+        geometry.faces.push(new THREE.Face3(4, 5, 11));
+        geometry.faces.push(new THREE.Face3(4, 11, 10));
+        geometry.faces.push(new THREE.Face3(5, 0, 6));
+        geometry.faces.push(new THREE.Face3(5, 6, 11));
+        // TODO: replace these faces with a separate roof using a different shader
+        geometry.faces.push(new THREE.Face3(6, 7, 8));
+        geometry.faces.push(new THREE.Face3(8, 9, 6));
+        geometry.faces.push(new THREE.Face3(9, 10, 6));
+        geometry.faces.push(new THREE.Face3(10, 11, 6));
+
+        geometry.mergeVertices();
+        geometry.computeFaceNormals();
+        geometry.computeVertexNormals();
+        this.geometry = geometry;
+    }
+});
+
+
 AFRAME.registerShader('buildings', {
     schema: {
         wallColor: {type: 'color', default: '#000080'},   // navy blue
@@ -81,10 +146,12 @@ void main() {
 AFRAME.registerPrimitive('a-shader-building', {
     defaultComponents: {
         geometry: {
-            primitive: 'box',
-            width: 20,
-            height: 40,
-            depth: 10
+            primitive: 'ell',
+            xSections: 5.11,
+            xThickness: 2,
+            zSections: 4,
+            zThickness: 2,
+            ySections: 8.4
         },
         material: {
             shader: 'buildings',
@@ -94,6 +161,6 @@ AFRAME.registerPrimitive('a-shader-building', {
     mappings: {
         'wall-color': 'material.wallColor',
         'window-color': 'material.windowColor',
-        'sun-position': 'material.sunPosition'
+        'sun-position': 'material.sunPosition',
     }
 });
