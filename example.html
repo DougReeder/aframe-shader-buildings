@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>aframe-shader-buildings example</title>
+    <meta name="description" content="A low-cost VR city, using aframe-shader-buildings">
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="aframe-shader-buildings.js"></script>
+    <script src="https://unpkg.com/aframe-simple-sun-sky@^1.2.0/simple-sun-sky.js"></script>
+    <script src="https://rawgit.com/dbradleyfl/aframe-gridhelper/master/dist/aframe-gridhelper-component.min.js"></script>
+    <script>
+        AFRAME.registerComponent('city', {
+            init: function () {
+            }
+        });
+    </script>
+</head>
+<body>
+<a-scene city gridhelper="size: 100; divisions: 20">
+    <a-simple-sun-sky sun-position="-0.7 1.0 -0.1"></a-simple-sun-sky>
+    <a-plane position="0 -0.01 0" rotation="-90 0 0" width="100" height="100" color="#909090"></a-plane>
+
+    <a-shader-building position="15 20 -10"></a-shader-building>
+</a-scene>
+</body>
+</html>
