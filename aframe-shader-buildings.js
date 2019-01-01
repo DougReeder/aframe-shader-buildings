@@ -5,15 +5,21 @@ AFRAME.registerShader('buildings', {
     schema: {
         wallColor: {type: 'color', default: '#000080'},   // navy blue
         windowColor: {type: 'color', default: '#181818'},   // dark gray
+        sunPosition: {type: 'vec3', default: {x:-1.0, y:1.0, z:-1.0}}
     },
 
     vertexShader: `
 precision mediump float;
 
+uniform vec3 sunNormal;
+
 varying vec3 pos;
+varying float sunFactor;
 
 void main() {
   pos = position;
+
+  sunFactor = 0.5 + max(dot(normal, sunNormal), 0.0);
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }`,
@@ -27,6 +33,7 @@ uniform vec3 wallColor;
 uniform vec3 windowColor;
 
 varying vec3 pos;
+varying float sunFactor;
 
 void main() {
     float xx1 = step(0.0, sin(pos.x * 2.0 * PI / 5.0 - PI / 2.0));
@@ -37,9 +44,9 @@ void main() {
 
     float yy1 = step(0.4, sin(pos.y * 2.0 * PI / 4.0 - 2.3));
 
-    vec3 color = mix(wallColor, windowColor, (xx1 * xx2 + zz1 * zz2) * yy1);
+    vec3 inherentColor = mix(wallColor, windowColor, (xx1 * xx2 + zz1 * zz2) * yy1);
 
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(inherentColor * sunFactor, 1.0);
 }`,
 
     /**
@@ -47,10 +54,12 @@ void main() {
      */
     init: function (data) {
         console.log("wallColor:", new THREE.Color(data.wallColor), "   windowColor:", new THREE.Color(data.windowColor));
+        let sunPos = new THREE.Vector3(data.sunPosition.x, data.sunPosition.y, data.sunPosition.z);
         this.material = new THREE.ShaderMaterial({
             uniforms: {
                 wallColor: {value: new THREE.Color(data.wallColor)},
                 windowColor: {value: new THREE.Color(data.windowColor)},
+                sunNormal: {value: sunPos.normalize()}
             },
             vertexShader: this.vertexShader,
             fragmentShader: this.fragmentShader
@@ -63,6 +72,8 @@ void main() {
     update: function (data) {
         this.material.uniforms.wallColor.value.set(data.wallColor);
         this.material.uniforms.windowColor.value.set(data.windowColor);
+        let sunPos = new THREE.Vector3(data.sunPosition.x, data.sunPosition.y, data.sunPosition.z);
+        this.material.uniforms.sunNormal.value = sunPos.normalize();
     },
 });
 
@@ -83,5 +94,6 @@ AFRAME.registerPrimitive('a-shader-building', {
     mappings: {
         'wall-color': 'material.wallColor',
         'window-color': 'material.windowColor',
+        'sun-position': 'material.sunPosition'
     }
 });
