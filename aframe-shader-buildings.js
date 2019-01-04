@@ -3,61 +3,74 @@
 
 AFRAME.registerGeometry('ell', {
     schema: {
-        xSections: {type: 'number', default: 4},
-        xThickness: {type: 'number', default: 2},
-        xProportion: {type: 'number', default: 5},
-
-        zSections: {type: 'number', default: 2},
-        zThickness: {type: 'number', default: 1},
-        zProportion: {type: 'number', default: 5},
-
-        ySections: {type: 'number', default: 1},
-        yProportion: {type: 'number', default: 4},
+        xProportion: {type: 'number', default: 5, min: 1},
+        zProportion: {type: 'number', default: 5, min: 1},
+        yProportion: {type: 'number', default: 4, min: 2},
+        // JSON array of objects with fields x, z, y, xSections, xWingSections, zSections, zWingSections, ySections
+        buildings: {type: 'string', default: '[{}]'}
     },
     init: function (data) {
+        // console.log("xProportion:", data.xProportion, "   zProportion:", data.zProportion);
+        // console.log("typeof data.buildings:", typeof data.buildings, "   data.buildings:", data.buildings);
+        let buildings = JSON.parse(data.buildings);
         var geometry = new THREE.Geometry();
 
-        let xProportion = data.xProportion;
-        let zProportion = data.zProportion;
+        for (let i=0; i< buildings.length; ++i) {
+            // console.log("buildings["+i+"]:", buildings[i]);
 
-        let xWingLength = (data.xSections - data.xThickness) * xProportion;
-        let xWingThickness = data.zThickness * zProportion;
-        let zWingLength = (data.zSections - data.zThickness) * zProportion;
-        let zWingThickness = data.xThickness * xProportion;
+            let x = buildings[i].x || 0;
+            let z = buildings[i].z || 0;
+            let y = buildings[i].y || 0;
 
-        let yHeight = data.ySections * data.yProportion;
-        geometry.vertices.push(new THREE.Vector3(0, 0, 0));
-        geometry.vertices.push(new THREE.Vector3(xWingLength, 0, 0));
-        geometry.vertices.push(new THREE.Vector3(xWingLength, 0, -xWingThickness));
-        geometry.vertices.push(new THREE.Vector3(-zWingThickness, 0, -xWingThickness));
-        geometry.vertices.push(new THREE.Vector3(-zWingThickness, 0, zWingLength));
-        geometry.vertices.push(new THREE.Vector3(0, 0, zWingLength));
-        geometry.vertices.push(new THREE.Vector3(0, yHeight, 0));
-        geometry.vertices.push(new THREE.Vector3(xWingLength, yHeight, 0));
-        geometry.vertices.push(new THREE.Vector3(xWingLength, yHeight, -xWingThickness));
-        geometry.vertices.push(new THREE.Vector3(-zWingThickness, yHeight, -xWingThickness));
-        geometry.vertices.push(new THREE.Vector3(-zWingThickness, yHeight, zWingLength));
-        geometry.vertices.push(new THREE.Vector3(0, yHeight, zWingLength));
+            let xSections = Math.max(buildings[i].xSections || 3, 1);
+            let xWingSections = Math.max(Math.min(buildings[i].xWingSections || 0, xSections - 1), 0);
+
+            let zSections = Math.max(buildings[i].zSections || 2, 1);
+            let zWingSections =  Math.max(Math.min(buildings[i].zWingSections || 0, zSections - 1), 0);
+
+            let xWingLength = xWingSections * data.xProportion;
+            let xWingThickness = (zSections - zWingSections) * data.zProportion;
+            let zWingLength = zWingSections * data.zProportion;
+            let zWingThickness = (xSections - xWingSections) * data.xProportion;
+
+            let yRoof = y + (buildings[i].ySections || 1) * data.yProportion;
+
+            // console.log("xSections:", xSections, "   xWingSections:", xWingSections,
+            //     "   xWingLength:", xWingLength, "   xWingThickness:", xWingThickness);
+
+            geometry.vertices.push(new THREE.Vector3(x, y, z));
+            geometry.vertices.push(new THREE.Vector3(x + xWingLength, y, z));
+            geometry.vertices.push(new THREE.Vector3(x + xWingLength, y, z - xWingThickness));
+            geometry.vertices.push(new THREE.Vector3(x - zWingThickness, y, z - xWingThickness));
+            geometry.vertices.push(new THREE.Vector3(x - zWingThickness, y, z + zWingLength));
+            geometry.vertices.push(new THREE.Vector3(x, y, z + zWingLength));
+            geometry.vertices.push(new THREE.Vector3(x, yRoof, z));
+            geometry.vertices.push(new THREE.Vector3(x + xWingLength, yRoof, z));
+            geometry.vertices.push(new THREE.Vector3(x + xWingLength, yRoof, z - xWingThickness));
+            geometry.vertices.push(new THREE.Vector3(x - zWingThickness, yRoof, z - xWingThickness));
+            geometry.vertices.push(new THREE.Vector3(x - zWingThickness, yRoof, z + zWingLength));
+            geometry.vertices.push(new THREE.Vector3(x, yRoof, z + zWingLength));
+
+            geometry.faces.push(new THREE.Face3(12 * i + 0, 12 * i + 1, 12 * i + 7));
+            geometry.faces.push(new THREE.Face3(12 * i + 0, 12 * i + 7, 12 * i + 6));
+            geometry.faces.push(new THREE.Face3(12 * i + 1, 12 * i + 2, 12 * i + 8));
+            geometry.faces.push(new THREE.Face3(12 * i + 1, 12 * i + 8, 12 * i + 7));
+            geometry.faces.push(new THREE.Face3(12 * i + 2, 12 * i + 3, 12 * i + 9));
+            geometry.faces.push(new THREE.Face3(12 * i + 2, 12 * i + 9, 12 * i + 8));
+            geometry.faces.push(new THREE.Face3(12 * i + 3, 12 * i + 4, 12 * i + 10));
+            geometry.faces.push(new THREE.Face3(12 * i + 3, 12 * i + 10, 12 * i + 9));
+            geometry.faces.push(new THREE.Face3(12 * i + 4, 12 * i + 5, 12 * i + 11));
+            geometry.faces.push(new THREE.Face3(12 * i + 4, 12 * i + 11, 12 * i + 10));
+            geometry.faces.push(new THREE.Face3(12 * i + 5, 12 * i + 0, 12 * i + 6));
+            geometry.faces.push(new THREE.Face3(12 * i + 5, 12 * i + 6, 12 * i + 11));
+            // TODO: replace these faces with a separate roof using a different shader
+            geometry.faces.push(new THREE.Face3(12 * i + 6, 12 * i + 7, 12 * i + 8));
+            geometry.faces.push(new THREE.Face3(12 * i + 8, 12 * i + 9, 12 * i + 6));
+            geometry.faces.push(new THREE.Face3(12 * i + 9, 12 * i + 10, 12 * i + 6));
+            geometry.faces.push(new THREE.Face3(12 * i + 10, 12 * i + 11, 12 * i + 6));
+        }
+
         geometry.computeBoundingBox();
-
-        geometry.faces.push(new THREE.Face3(0, 1, 7));
-        geometry.faces.push(new THREE.Face3(0, 7, 6));
-        geometry.faces.push(new THREE.Face3(1, 2, 8));
-        geometry.faces.push(new THREE.Face3(1, 8, 7));
-        geometry.faces.push(new THREE.Face3(2, 3, 9));
-        geometry.faces.push(new THREE.Face3(2, 9, 8));
-        geometry.faces.push(new THREE.Face3(3, 4, 10));
-        geometry.faces.push(new THREE.Face3(3, 10, 9));
-        geometry.faces.push(new THREE.Face3(4, 5, 11));
-        geometry.faces.push(new THREE.Face3(4, 11, 10));
-        geometry.faces.push(new THREE.Face3(5, 0, 6));
-        geometry.faces.push(new THREE.Face3(5, 6, 11));
-        // TODO: replace these faces with a separate roof using a different shader
-        geometry.faces.push(new THREE.Face3(6, 7, 8));
-        geometry.faces.push(new THREE.Face3(8, 9, 6));
-        geometry.faces.push(new THREE.Face3(9, 10, 6));
-        geometry.faces.push(new THREE.Face3(10, 11, 6));
-
         geometry.mergeVertices();
         geometry.computeFaceNormals();
         geometry.computeVertexNormals();
@@ -68,7 +81,7 @@ AFRAME.registerGeometry('ell', {
 
 AFRAME.registerShader('buildings', {
     schema: {
-        wallColor: {type: 'color', default: '#000080'},   // navy blue
+        wallColor: {type: 'color', default: '#909090'},   // off-white, like concrete
         windowColor: {type: 'color', default: '#181818'},   // dark gray
         sunPosition: {type: 'vec3', default: {x:-1.0, y:1.0, z:-1.0}}
     },
@@ -118,7 +131,7 @@ void main() {
      * `init` used to initialize material. Called once.
      */
     init: function (data) {
-        console.log("wallColor:", new THREE.Color(data.wallColor), "   windowColor:", new THREE.Color(data.windowColor));
+        // console.log("wallColor:", new THREE.Color(data.wallColor), "   windowColor:", new THREE.Color(data.windowColor));
         let sunPos = new THREE.Vector3(data.sunPosition.x, data.sunPosition.y, data.sunPosition.z);
         this.material = new THREE.ShaderMaterial({
             uniforms: {
@@ -143,15 +156,36 @@ void main() {
 });
 
 
-AFRAME.registerPrimitive('a-shader-building', {
+AFRAME.registerPrimitive('a-shader-buildings', {
     defaultComponents: {
         geometry: {
             primitive: 'ell',
-            xSections: 5.11,
-            xThickness: 2,
-            zSections: 4,
-            zThickness: 2,
-            ySections: 8.4
+            buildings: [
+                {
+                    x: -25,
+                    z: -20,
+
+                    xSections: 5.11,
+                    xWingSections: 3.11,
+
+                    zSections: 4,
+                    zWingSections: 2,
+
+                    ySections: 8.4
+                },
+                {
+                    x: 30,
+                    z: -30,
+
+                    xSections: 6,
+                    xWingSections: 2,
+
+                    zSections: 5,
+                    zWingSections: 2,
+
+                    ySections: 6.2
+                },
+            ]
         },
         material: {
             shader: 'buildings',
@@ -159,6 +193,11 @@ AFRAME.registerPrimitive('a-shader-building', {
     },
 
     mappings: {
+        'x-proportion': 'geometry.xProportion',
+        'z-proportion': 'geometry.zProportion',
+        'y-proportion': 'geometry.yProportion',
+        'buildings': 'geometry.buildings',
+
         'wall-color': 'material.wallColor',
         'window-color': 'material.windowColor',
         'sun-position': 'material.sunPosition',

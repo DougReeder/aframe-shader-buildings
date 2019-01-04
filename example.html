@@ -11,16 +11,65 @@
     <script>
         AFRAME.registerComponent('city', {
             init: function () {
+                let sceneEl = this.el;
+
+                let yinBuildingsEl = document.createElement('a-shader-buildings');
+                yinBuildingsEl.setAttribute('sun-position', "-0.5 1.0 1.0");
+                yinBuildingsEl.setAttribute('wall-color', '#808080');
+                // yinBuildingsEl.setAttribute('x-proportion', 6);
+                let yinBuildings = [];
+
+                let yangBuildingsEl = document.createElement('a-shader-buildings');
+                yangBuildingsEl.setAttribute('sun-position', "-0.5 1.0 1.0");
+                yangBuildingsEl.setAttribute('wall-color', '#a0a0a0');   // #6e210b brick red
+                let yangBuildings = [];
+
+                for (let i=-15.5; i<=15.5; ++i) {
+                    for (let j=-15.5; j<=15.5; ++j) {
+                        let xSections = Math.ceil(Math.random() * 8);
+                        let xWingSections = Math.floor(Math.random() * xSections);
+                        let zSections = xSections + Math.round(Math.random() * 5 - 2.5);
+                        let zWingSections = Math.floor(Math.random() * zSections);
+                        let building = {
+                            x: i * 60,
+                            z: j * 60,
+                            xSections: xSections,
+                            xWingSections: xWingSections,
+                            zSections: zSections,
+                            zWingSections: zWingSections,
+                            ySections: Math.ceil((Math.exp(Math.random()) - 0.99999) * 20),
+                        };
+                        if (Math.random() >= 0.5) {
+                            yinBuildings.push(building);
+                        } else {
+                            yangBuildings.push(building);
+                        }
+
+                    }
+                }
+
+                // console.log("yinBuildings", yinBuildings);
+                yinBuildingsEl.setAttribute('buildings', JSON.stringify(yinBuildings));
+                sceneEl.appendChild(yinBuildingsEl);
+
+                yangBuildingsEl.setAttribute('buildings', JSON.stringify(yangBuildings));
+                sceneEl.appendChild(yangBuildingsEl);
             }
         });
     </script>
 </head>
 <body>
-<a-scene city gridhelper="size: 400; divisions: 80">
-    <a-simple-sun-sky sun-position="1.0 1.0 1.0"></a-simple-sun-sky>
-    <a-plane position="0 -0.05 0" rotation="-90 0 0" width="400" height="400" color="#909090"></a-plane>
+<a-scene city gridhelper="size: 2000; divisions: 400" stats>
+    <a-plane position="0 -0.05 0" rotation="-90 0 0" width="2000" height="2000" color="#338e60"></a-plane>
 
-    <a-shader-building position="-5 0 -20" sun-position="1.0 1.0 1.0"></a-shader-building>
+    <!-- The "Burj Synthetica" -->
+    <a-shader-buildings sun-position="-0.5 1.0 1.0" buildings=
+            '[{"x":5,"z":-995,"xSections":12,"xWingSections":5,"zSections":12,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xSections":9,"xWingSections":4,"zSections":9,"zWingSections":4,"ySections":30},{"x":-5,"z":-1005,"y":240,"xSections":6,"xWingSections":3,"zSections":6,"zWingSections":3,"ySections":30},{"x":-5,"z":-1005,"y":360,"xSections":3,"xWingSections":1,"zSections":3,"zWingSections":1,"ySections":30}]'
+    ></a-shader-buildings>
+
+    <a-simple-sun-sky sun-position="-0.5 1.0 1.0"></a-simple-sun-sky>
+    <a-entity light="type: ambient; color: #BBB"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
 </a-scene>
 </body>
 </html>
