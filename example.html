@@ -16,12 +16,18 @@
                 let yinBuildingsEl = document.createElement('a-shader-buildings');
                 yinBuildingsEl.setAttribute('sun-position', "-0.5 1.0 1.0");
                 yinBuildingsEl.setAttribute('wall-color', '#808080');
-                // yinBuildingsEl.setAttribute('x-proportion', 6);
                 let yinBuildings = [];
 
                 let yangBuildingsEl = document.createElement('a-shader-buildings');
                 yangBuildingsEl.setAttribute('sun-position', "-0.5 1.0 1.0");
-                yangBuildingsEl.setAttribute('wall-color', '#a0a0a0');   // #6e210b brick red
+                yangBuildingsEl.setAttribute('x-proportion-geometry', 6);
+                yangBuildingsEl.setAttribute('x-proportion-material', 6);
+                yangBuildingsEl.setAttribute('z-proportion-geometry', 6);
+                yangBuildingsEl.setAttribute('z-proportion-material', 6);
+                yangBuildingsEl.setAttribute('y-proportion-geometry', 5.5);
+                yangBuildingsEl.setAttribute('y-proportion-material', 5.5);
+                yangBuildingsEl.setAttribute('wall-color', '#a0a0a0');   // light gray
+                // yangBuildingsEl.setAttribute('wall-color', '#6e210b');   // brick red
                 let yangBuildings = [];
 
                 for (let i=-15.5; i<=15.5; ++i) {
@@ -31,8 +37,8 @@
                         let zSections = xSections + Math.round(Math.random() * 5 - 2.5);
                         let zWingSections = Math.floor(Math.random() * zSections);
                         let building = {
-                            x: i * 60,
-                            z: j * 60,
+                            x: i * 60,   // common multiple of x-proportion for yin and yang buildings
+                            z: j * 60,   // common multiple of z-proportion for yin and yang buildings
                             xSections: xSections,
                             xWingSections: xWingSections,
                             zSections: zSections,
@@ -59,7 +65,7 @@
     </script>
 </head>
 <body>
-<a-scene city gridhelper="size: 2000; divisions: 400" stats>
+<a-scene city gridhelperXXX="size: 2000; divisions: 400" stats>
     <a-plane position="0 -0.05 0" rotation="-90 0 0" width="2000" height="2000" color="#338e60"></a-plane>
 
     <!-- The "Burj Synthetica" -->
