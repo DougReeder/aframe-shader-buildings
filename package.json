@@ -1,9 +1,9 @@
 {
   "name": "aframe-shader-buildings",
-  "version": "0.5.0",
-  "description": "An A-Frame WebXR component for cheaply creating thousands of boxy buildings.",
-  "main": "aframe-shader-buildings.js",
+  "version": "0.5.1",
+  "description": "An A-Frame WebVR component for cheaply creating thousands of boxy buildings.",
   "scripts": {
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/DougReeder/aframe-shader-buildings/issues"
   },
-  "homepage": "https://github.com/DougReeder/aframe-shader-buildings#readme"
+  "homepage": "https://github.com/DougReeder/aframe-shader-buildings#readme",
+  "devDependencies": {
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
+  }
 }
