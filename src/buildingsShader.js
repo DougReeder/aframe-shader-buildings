@@ -1,6 +1,8 @@
-// buildingsShader.js - shader for aframe-shader-buildings
+// buildingsShader.js - wraps a volumetric WebGL shader for A-Frame
 // Copyright © 2019 by P. Douglas Reeder under the MIT License
 
+import vertexShader from './buildingsShaderVert.glsl'
+import fragmentShader from './buildingsShaderFrag.glsl'
 
 AFRAME.registerShader('buildings', {
     schema: {
@@ -10,55 +12,9 @@ AFRAME.registerShader('buildings', {
         windowWidth: {type: 'number', default: 0.0, min: -1.0, max: 1.0},
         windowHeight: {type: 'number', default: -0.4, min: -1.0, max: 1.0},
         wallColor: {type: 'color', default: '#909090'},   // off-white, like concrete
-        windowColor: {type: 'color', default: '#181818'},   // dark gray
+        windowColor: {type: 'color', default: '#181818'},   // dark gray, like tinted windows
         sunPosition: {type: 'vec3', default: {x:-1.0, y:1.0, z:-1.0}}
     },
-
-    vertexShader: `
-precision mediump float;
-
-uniform vec3 sunNormal;
-
-varying vec3 pos;
-varying float sunFactor;
-
-void main() {
-  pos = position;
-
-  sunFactor = 0.5 + max(dot(normal, sunNormal), 0.0);
-
-  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-}`,
-
-    fragmentShader: `
-precision mediump float;
-
-const float PI = 3.1415926535897932384626433832795;
-
-uniform float xProportion;
-uniform float zProportion;
-uniform float yProportion;
-uniform float windowWidth;
-uniform float windowHeight;
-uniform vec3 wallColor;
-uniform vec3 windowColor;
-
-varying vec3 pos;
-varying float sunFactor;
-
-void main() {
-    float xx1 = step(windowWidth, sin(pos.x * 2.0 * PI / xProportion - PI / 2.0));
-    float xx2 = step(0.8, sin(pos.z * 2.0 * PI / zProportion + PI / 2.0));
-
-    float zz1 = step(windowWidth, sin(pos.z * 2.0 * PI / zProportion - PI / 2.0));
-    float zz2 = step(0.8, sin(pos.x * 2.0 * PI / xProportion + PI / 2.0));
-
-    float yy1 = step(windowHeight, sin(pos.y * 2.0 * PI / yProportion - 2.0));
-
-    vec3 inherentColor = mix(wallColor, windowColor, (xx1 * xx2 + zz1 * zz2) * yy1);
-
-    gl_FragColor = vec4(inherentColor * sunFactor, 1.0);
-}`,
 
     /**
      * `init` used to initialize material. Called once.
@@ -77,8 +33,8 @@ void main() {
                 windowColor: {value: new THREE.Color(data.windowColor)},
                 sunNormal: {value: sunPos.normalize()}
             },
-            vertexShader: this.vertexShader,
-            fragmentShader: this.fragmentShader
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader
         });
     },
 
