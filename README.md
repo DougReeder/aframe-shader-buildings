@@ -43,4 +43,6 @@ Ell-shaped buildings use only 12 triangles per tier, regardless of the number of
 
 To Do
 ---
-More building shapes: cee, eee and box, for starters.
+
+* rotate buildings for more variety
+* More building shapes: cee, plus, eee and box, for starters.

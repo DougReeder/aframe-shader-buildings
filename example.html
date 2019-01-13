@@ -34,10 +34,34 @@
 
                 for (let i=-15.5; i<=15.5; ++i) {
                     for (let j=-15.5; j<=15.5; ++j) {
-                        let xSections = Math.ceil(Math.random() * 8);
+                        let xSections = 1 + Math.floor(Math.random() * 8);
                         let xWingSections = Math.floor(Math.random() * xSections);
-                        let zSections = xSections + Math.round(Math.random() * 5 - 2.5);
+                        let zSections = 1 + Math.floor(Math.random() * 8);
                         let zWingSections = Math.floor(Math.random() * zSections);
+                        let ySections = Math.ceil((Math.exp(Math.random()) - 0.99999) * 20) + Math.random() * 0.3;
+
+                        // sanity-checks proportions
+                        if (xWingSections >= 2 && zSections - zWingSections < 2) {
+                            ++zSections
+                        }
+                        if (zWingSections >= 2 && xSections - xWingSections < 2) {
+                            ++xSections
+                        }
+                        if (ySections >= 2) {
+                            if (xSections < 2) {
+                                xSections = 2;
+                            }
+                            if (zSections < 2) {
+                                zSections = 2;
+                            }
+                        }
+                        if (ySections >= 10 && zSections < 3) {
+                            zSections = 3;
+                        }
+                        if (ySections >= 20 && xSections < 3) {
+                            xSections = 3;
+                        }
+
                         let building = {
                             x: i * 60,   // common multiple of x-proportion for yin and yang buildings
                             z: j * 60,   // common multiple of z-proportion for yin and yang buildings
@@ -45,9 +69,19 @@
                             xWingSections: xWingSections,
                             zSections: zSections,
                             zWingSections: zWingSections,
-                            ySections: Math.ceil((Math.exp(Math.random()) - 0.99999) * 20),
+                            ySections: ySections,
                         };
                         if (Math.random() >= 0.5) {
+                            // makes some walls blank
+                            if (zSections - zWingSections <= 2 && Math.random() < 0.3) {
+                                building.xSections += 0.15;
+                                building.xWingSections += 0.15;
+                            }
+                            if (xSections - xWingSections <= 2 && Math.random() < 0.3) {
+                                building.zSections += 0.15;
+                                building.zWingSections += 0.15;
+                            }
+
                             yinBuildings.push(building);
                         } else {
                             yangBuildings.push(building);

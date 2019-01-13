@@ -86,32 +86,7 @@ AFRAME.registerPrimitive('a-shader-buildings', {
     defaultComponents: {
         geometry: {
             primitive: 'ell',
-            buildings: [
-                {
-                    x: -25,
-                    z: -20,
-
-                    xSections: 5.11,
-                    xWingSections: 3.11,
-
-                    zSections: 4,
-                    zWingSections: 2,
-
-                    ySections: 8.4
-                },
-                {
-                    x: 30,
-                    z: -30,
-
-                    xSections: 6,
-                    xWingSections: 2,
-
-                    zSections: 5,
-                    zWingSections: 2,
-
-                    ySections: 6.2
-                },
-            ]
+            buildings: []
         },
         material: {
             shader: 'buildings',
