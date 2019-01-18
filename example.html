@@ -34,52 +34,57 @@
 
                 for (let i=-15.5; i<=15.5; ++i) {
                     for (let j=-15.5; j<=15.5; ++j) {
-                        let xSections = 1 + Math.floor(Math.random() * 8);
-                        let xWingSections = Math.floor(Math.random() * xSections);
-                        let zSections = 1 + Math.floor(Math.random() * 8);
-                        let zWingSections = Math.floor(Math.random() * zSections);
+                        let xCoreSections = 1 + Math.floor(Math.random() * 4);
+                        let xWingSections = Math.floor(Math.random() * 4);
+                        let zCoreSections = 1 + Math.floor(Math.random() * 4);
+                        let zWingSections = Math.floor(Math.random() * 4);
                         let ySections = Math.ceil((Math.exp(Math.random()) - 0.99999) * 20) + Math.random() * 0.3;
 
                         // sanity-checks proportions
-                        if (xWingSections >= 2 && zSections - zWingSections < 2) {
-                            ++zSections
+                        if (xWingSections >= 2 && zCoreSections < 2) {
+                            ++zCoreSections
                         }
-                        if (zWingSections >= 2 && xSections - xWingSections < 2) {
-                            ++xSections
+                        if (zWingSections >= 2 && xCoreSections < 2) {
+                            ++xCoreSections
                         }
                         if (ySections >= 2) {
-                            if (xSections < 2) {
-                                xSections = 2;
+                            while (xCoreSections + xWingSections < 2) {
+                                ++xCoreSections;
                             }
-                            if (zSections < 2) {
-                                zSections = 2;
+                            while (zCoreSections + zWingSections < 2) {
+                                ++zCoreSections;
                             }
                         }
-                        if (ySections >= 10 && zSections < 3) {
-                            zSections = 3;
+                        if (ySections >= 10) {
+                            while (zCoreSections + zWingSections < 3) {
+                                ++zCoreSections;
+                            }
                         }
-                        if (ySections >= 20 && xSections < 3) {
-                            xSections = 3;
+                        if (ySections >= 20) {
+                            while (xCoreSections + xWingSections < 3) {
+                                ++xCoreSections;
+                            }
                         }
 
                         let building = {
                             x: i * 60,   // common multiple of x-proportion for yin and yang buildings
                             z: j * 60,   // common multiple of z-proportion for yin and yang buildings
-                            xSections: xSections,
+                            xCoreSections: xCoreSections,
                             xWingSections: xWingSections,
-                            zSections: zSections,
+                            zCoreSections: zCoreSections,
                             zWingSections: zWingSections,
                             ySections: ySections,
                         };
                         if (Math.random() >= 0.5) {
-                            // makes some walls blank
-                            if (zSections - zWingSections <= 2 && Math.random() < 0.3) {
-                                building.xSections += 0.15;
+                            // makes some walls blank (only works if windowWidth is not too great)
+                            if (zCoreSections <= 2 && Math.random() < 0.3) {
                                 building.xWingSections += 0.15;
-                            }
-                            if (xSections - xWingSections <= 2 && Math.random() < 0.3) {
-                                building.zSections += 0.15;
+                            } else if (xCoreSections <= 2 && Math.random() < 0.3) {
                                 building.zWingSections += 0.15;
+                            } else if (zCoreSections + zWingSections <= 4.5 && Math.random() < 0.1) {
+                                building.xCoreSections += 0.15;
+                            } else if (xCoreSections + xWingSections <= 4.5 && Math.random() < 0.1) {
+                                building.zCoreSections += 0.15;
                             }
 
                             yinBuildings.push(building);
@@ -106,7 +111,7 @@
 
     <!-- The "Burj Synthetica" -->
     <a-shader-buildings sun-position="-0.5 1.0 1.0" buildings=
-            '[{"x":5,"z":-995,"xSections":12,"xWingSections":5,"zSections":12,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xSections":9,"xWingSections":4,"zSections":9,"zWingSections":4,"ySections":30},{"x":-5,"z":-1005,"y":240,"xSections":6,"xWingSections":3,"zSections":6,"zWingSections":3,"ySections":30},{"x":-5,"z":-1005,"y":360,"xSections":3,"xWingSections":1,"zSections":3,"zWingSections":1,"ySections":30}]'
+            '[{"x":5,"z":-995,"xCoreSections":7,"xWingSections":5,"zCoreSections":7,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xCoreSections":5,"xWingSections":4,"zCoreSections":5,"zWingSections":4,"ySections":30},{"x":-5,"z":-1005,"y":240,"xCoreSections":3,"xWingSections":3,"zCoreSections":3,"zWingSections":3,"ySections":30},{"x":-5,"z":-1005,"y":360,"xCoreSections":2,"xWingSections":1,"zCoreSections":2,"zWingSections":1,"ySections":30}]'
     ></a-shader-buildings>
 
     <a-simple-sun-sky sun-position="-0.5 1.0 1.0"></a-simple-sun-sky>

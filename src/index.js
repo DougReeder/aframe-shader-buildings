@@ -24,33 +24,33 @@ AFRAME.registerGeometry('ell', {
             let z = buildings[i].z || 0;
             let y = buildings[i].y || 0;
 
-            let xSections = Math.max(buildings[i].xSections || 3, 1);
-            let xWingSections = Math.max(Math.min(buildings[i].xWingSections || 0, xSections - 1), 0);
+            let xCoreSections = Math.max(buildings[i].xCoreSections || 2, 1);
+            let xWingSections = Math.max(buildings[i].xWingSections || 0, 0);
 
-            let zSections = Math.max(buildings[i].zSections || 2, 1);
-            let zWingSections =  Math.max(Math.min(buildings[i].zWingSections || 0, zSections - 1), 0);
+            let zCoreSections = Math.max(buildings[i].zCoreSections || 2, 1);
+            let zWingSections = Math.max(buildings[i].zWingSections || 0, 0);
 
+            let xCoreLength = xCoreSections * data.xProportion;
             let xWingLength = xWingSections * data.xProportion;
-            let xWingThickness = (zSections - zWingSections) * data.zProportion;
+            let zCoreLength = zCoreSections * data.zProportion;
             let zWingLength = zWingSections * data.zProportion;
-            let zWingThickness = (xSections - xWingSections) * data.xProportion;
 
             let yRoof = y + (buildings[i].ySections || 1) * data.yProportion;
 
             // console.log("xSections:", xSections, "   xWingSections:", xWingSections,
-            //     "   xWingLength:", xWingLength, "   xWingThickness:", xWingThickness);
+            //     "   xWingLength:", xWingLength, "   zCoreLength:", zCoreLength);
 
             geometry.vertices.push(new THREE.Vector3(x, y, z));
             geometry.vertices.push(new THREE.Vector3(x + xWingLength, y, z));
-            geometry.vertices.push(new THREE.Vector3(x + xWingLength, y, z - xWingThickness));
-            geometry.vertices.push(new THREE.Vector3(x - zWingThickness, y, z - xWingThickness));
-            geometry.vertices.push(new THREE.Vector3(x - zWingThickness, y, z + zWingLength));
+            geometry.vertices.push(new THREE.Vector3(x + xWingLength, y, z - zCoreLength));
+            geometry.vertices.push(new THREE.Vector3(x - xCoreLength, y, z - zCoreLength));
+            geometry.vertices.push(new THREE.Vector3(x - xCoreLength, y, z + zWingLength));
             geometry.vertices.push(new THREE.Vector3(x, y, z + zWingLength));
             geometry.vertices.push(new THREE.Vector3(x, yRoof, z));
             geometry.vertices.push(new THREE.Vector3(x + xWingLength, yRoof, z));
-            geometry.vertices.push(new THREE.Vector3(x + xWingLength, yRoof, z - xWingThickness));
-            geometry.vertices.push(new THREE.Vector3(x - zWingThickness, yRoof, z - xWingThickness));
-            geometry.vertices.push(new THREE.Vector3(x - zWingThickness, yRoof, z + zWingLength));
+            geometry.vertices.push(new THREE.Vector3(x + xWingLength, yRoof, z - zCoreLength));
+            geometry.vertices.push(new THREE.Vector3(x - xCoreLength, yRoof, z - zCoreLength));
+            geometry.vertices.push(new THREE.Vector3(x - xCoreLength, yRoof, z + zWingLength));
             geometry.vertices.push(new THREE.Vector3(x, yRoof, z + zWingLength));
 
             geometry.faces.push(new THREE.Face3(12 * i + 0, 12 * i + 1, 12 * i + 7));
