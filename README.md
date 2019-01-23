@@ -25,11 +25,11 @@ Declaration of a single two-tiered building:
 		'[{"x":5,"z":-995,"xSections":12,"xWingSections":5,"zSections":12,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xSections":9,"xWingSections":4,"zSections":9,"zWingSections":4,"ySections":30}]'
 ></a-shader-buildings>
 ```
-The `buildings` attribute is JSON, which is problematic in HTML attributes.  The recommended workaround is 
+The `buildings` attribute is JSON, which is problematic in HTML attributes.  
+Normally, the `buildings` attribute is set programatically (see example.html).
+The recommended workaround for declaring in HTML is 
 to use single quotes around the attribute value, which all modern browsers parse correctly 
 (but an HTML linter will complain about).
-
-Normally, the `buildings` attribute is set programatically.  See example.html
 
 All buildings in the same entity will have the same style, so typically you'll define a number of a-shader-buildings
 entities, each with a different style.

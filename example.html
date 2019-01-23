@@ -13,32 +13,80 @@
             init: function () {
                 let sceneEl = this.el;
 
-                let yinBuildingsEl = document.createElement('a-shader-buildings');
-                yinBuildingsEl.setAttribute('sun-position', "-0.5 1.0 1.0");
-                yinBuildingsEl.setAttribute('wall-color', '#808080');
-                let yinBuildings = [];
+                const numStyles = 6;
+                let buildings = this.randomBuildings(numStyles);   // array of arrays
 
-                let yangBuildingsEl = document.createElement('a-shader-buildings');
-                yangBuildingsEl.setAttribute('sun-position', "-0.5 1.0 1.0");
-                yangBuildingsEl.setAttribute('x-proportion-geometry', 6);
-                yangBuildingsEl.setAttribute('x-proportion-material', 6);
-                yangBuildingsEl.setAttribute('z-proportion-geometry', 6);
-                yangBuildingsEl.setAttribute('z-proportion-material', 6);
-                yangBuildingsEl.setAttribute('y-proportion-geometry', 5.5);
-                yangBuildingsEl.setAttribute('y-proportion-material', 5.5);
-                yangBuildingsEl.setAttribute('window-width', 0.95);
-                yangBuildingsEl.setAttribute('window-height', 0.0);
-                yangBuildingsEl.setAttribute('wall-color', '#a0a0a0');   // light gray
-                // yangBuildingsEl.setAttribute('wall-color', '#6e210b');   // brick red
-                let yangBuildings = [];
+                let buildingEls = new Array(numStyles);
 
+                buildingEls[0] = document.createElement('a-shader-buildings');
+                buildingEls[0].setAttribute('wall-color', '#808080');
+
+                buildingEls[1] = document.createElement('a-shader-buildings');
+                buildingEls[1].setAttribute('x-proportion-geometry', 4);
+                buildingEls[1].setAttribute('x-proportion-material', 4);
+                buildingEls[1].setAttribute('z-proportion-geometry', 4);
+                buildingEls[1].setAttribute('z-proportion-material', 4);
+                buildingEls[1].setAttribute('y-proportion-geometry', 3.5);
+                buildingEls[1].setAttribute('y-proportion-material', 3.5);
+                buildingEls[1].setAttribute('window-width', -0.5);
+                buildingEls[1].setAttribute('window-height', 0.0);
+                buildingEls[1].setAttribute('wall-color', '#6e2b11');   // brick red
+
+                buildingEls[2] = document.createElement('a-shader-buildings');
+                buildingEls[2].setAttribute('x-proportion-geometry', 6);
+                buildingEls[2].setAttribute('x-proportion-material', 6);
+                buildingEls[2].setAttribute('z-proportion-geometry', 6);
+                buildingEls[2].setAttribute('z-proportion-material', 6);
+                buildingEls[2].setAttribute('y-proportion-geometry', 4.5);
+                buildingEls[2].setAttribute('y-proportion-material', 4.5);
+                buildingEls[2].setAttribute('window-width', -0.5);
+                buildingEls[2].setAttribute('window-height', 0.3);
+                buildingEls[2].setAttribute('wall-color', '#6e2b11');   // brick red
+
+                buildingEls[3] = document.createElement('a-shader-buildings');
+                buildingEls[3].setAttribute('x-proportion-geometry', 6);
+                buildingEls[3].setAttribute('x-proportion-material', 6);
+                buildingEls[3].setAttribute('z-proportion-geometry', 6);
+                buildingEls[3].setAttribute('z-proportion-material', 6);
+                buildingEls[3].setAttribute('y-proportion-geometry', 5.5);
+                buildingEls[3].setAttribute('y-proportion-material', 5.5);
+                buildingEls[3].setAttribute('window-width', 0.95);
+                buildingEls[3].setAttribute('window-height', 0.0);
+                buildingEls[3].setAttribute('wall-color', '#a0a0a0');   // light gray
+                // buildingEls[3].setAttribute('wall-color', '#6e210b');   // brick red
+
+                buildingEls[4] = document.createElement('a-shader-buildings');
+                buildingEls[4].setAttribute('window-width', 0.8);
+                buildingEls[4].setAttribute('window-height', -0.1);
+                // buildingEls[4].setAttribute('wall-color', '#44cc88');
+
+                buildingEls[5] = document.createElement('a-shader-buildings');
+                buildingEls[5].setAttribute('y-proportion-geometry', 5);
+                buildingEls[5].setAttribute('y-proportion-material', 5);
+                buildingEls[5].setAttribute('window-width', 0.5);
+                buildingEls[5].setAttribute('window-height', 0.0);
+                buildingEls[5].setAttribute('wall-color', '#a5a696');
+
+                for (let s=0; s<numStyles; ++s) {
+                    buildingEls[s].setAttribute('sun-position', "-0.5 1.0 1.0");
+                    buildingEls[s].setAttribute('buildings', JSON.stringify(buildings[s]));
+                    buildingEls[s].classList.add('landscape');
+                    sceneEl.appendChild(buildingEls[s]);
+                }
+            },
+
+            randomBuildings: function (numStyles) {
+                let buildings = new Array(numStyles);
+                for (let s=0; s<numStyles; ++s) {
+                    buildings[s] = [];
+                }
                 for (let i=-15.5; i<=15.5; ++i) {
-                    for (let j=-15.5; j<=15.5; ++j) {
+                    for (let j = -15.5; j <= 15.5; ++j) {
                         let xCoreSections = 1 + Math.floor(Math.random() * 4);
                         let xWingSections = Math.floor(Math.random() * 4);
                         let zCoreSections = 1 + Math.floor(Math.random() * 4);
                         let zWingSections = Math.floor(Math.random() * 4);
-                        let ySections = Math.ceil((Math.exp(Math.random()) - 0.99999) * 20) + Math.random() * 0.3;
+                        let ySections = Math.ceil((Math.exp(Math.random()) - 0.99999) * 20) + Math.random() * 0.2;
 
                         // sanity-checks proportions
                         if (xWingSections >= 2 && zCoreSections < 2) {
@@ -67,15 +115,17 @@
                         }
 
                         let building = {
-                            x: i * 60,   // common multiple of x-proportion for yin and yang buildings
-                            z: j * 60,   // common multiple of z-proportion for yin and yang buildings
+                            x: i * 60,   // common multiple of x-proportion for building styles
+                            z: j * 60,   // common multiple of z-proportion for building styles
                             xCoreSections: xCoreSections,
                             xWingSections: xWingSections,
                             zCoreSections: zCoreSections,
                             zWingSections: zWingSections,
                             ySections: ySections,
                         };
-                        if (Math.random() >= 0.5) {
+
+                        let style = Math.floor(Math.random() * numStyles);
+                        if (style < numStyles/2) {
                             // makes some walls blank (only works if windowWidth is not too great)
                             if (zCoreSections <= 2 && Math.random() < 0.3) {
                                 building.xWingSections += 0.15;
@@ -86,22 +136,13 @@
                             } else if (xCoreSections + xWingSections <= 4.5 && Math.random() < 0.1) {
                                 building.zCoreSections += 0.15;
                             }
-
-                            yinBuildings.push(building);
-                        } else {
-                            yangBuildings.push(building);
                         }
-
+                        buildings[style].push(building);
                     }
                 }
-
-                // console.log("yinBuildings", yinBuildings);
-                yinBuildingsEl.setAttribute('buildings', JSON.stringify(yinBuildings));
-                sceneEl.appendChild(yinBuildingsEl);
-
-                yangBuildingsEl.setAttribute('buildings', JSON.stringify(yangBuildings));
-                sceneEl.appendChild(yangBuildingsEl);
+                return buildings;
             }
+
         });
     </script>
 </head>
