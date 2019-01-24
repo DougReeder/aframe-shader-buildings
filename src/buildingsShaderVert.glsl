@@ -1,6 +1,4 @@
 
-precision mediump float;
-
 uniform vec3 sunNormal;
 
 varying vec3 pos;
