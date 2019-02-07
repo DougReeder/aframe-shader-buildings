@@ -10,19 +10,21 @@ Details are perfectly sharp, no matter how close you get.
 [live example scene](https://dougreeder.github.io/aframe-shader-buildings/example.html)
 On desktop, drag to turn and use WASD keys to move. 
 
+[flyable city from Elfland Glider](https://elfland-glider.surge.sh/city/)
+
 Usage
 ---
 
 Include using 
 ```html
-<script src="https://unpkg.com/aframe-shader-buildings@^0.6.0/dist/main.js"></script>
+<script src="https://unpkg.com/aframe-shader-buildings@^0.7.1/dist/main.js"></script>
 ```
 
 
 Declaration of a single two-tiered building:
 ```html
 <a-shader-buildings sun-position="-0.5 1.0 1.0" buildings=
-		'[{"x":5,"z":-995,"xSections":12,"xWingSections":5,"zSections":12,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xSections":9,"xWingSections":4,"zSections":9,"zWingSections":4,"ySections":30}]'
+		'[{"x":5,"z":-995,"xCoreSections":7,"xWingSections":5,"zSections":12,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xCoreSections":5,"xWingSections":4,"zSections":9,"zWingSections":4,"ySections":30}]'
 ></a-shader-buildings>
 ```
 The `buildings` attribute is JSON, which is problematic in HTML attributes.  
@@ -34,10 +36,19 @@ to use single quotes around the attribute value, which all modern browsers parse
 All buildings in the same entity will have the same style, so typically you'll define a number of a-shader-buildings
 entities, each with a different style.
 
+Typically, you'll place the buildings on a flat plateau or valley floor, which may be at any elevation.
+Placing a building on a slope requires careful planning to keep windows from being buried.
+
 
 Parameters 
 ---
 Typically, you'll leave the entity x, y, and z as zero, but you don't have to.
+
+### elevation-geometry, elevation-material
+default: 0
+
+set these to the same value. Altitude of the base of the buildings.
+
 
 ### x-proportion-geometry, x-proportion-material
 default: 5

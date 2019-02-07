@@ -6,6 +6,7 @@ import fragmentShader from './buildingsShaderFrag.glsl'
 
 AFRAME.registerShader('buildings', {
     schema: {
+        elevation: {type: 'number', default: 0},
         xProportion: {type: 'number', default: 5},
         zProportion: {type: 'number', default: 5},
         yProportion: {type: 'number', default: 4},
@@ -24,6 +25,7 @@ AFRAME.registerShader('buildings', {
         let sunPos = new THREE.Vector3(data.sunPosition.x, data.sunPosition.y, data.sunPosition.z);
         this.material = new THREE.ShaderMaterial({
             uniforms: {
+                elevation: {value: data.elevation},
                 xProportion: {value: data.xProportion},
                 zProportion: {value: data.zProportion},
                 yProportion: {value: data.yProportion},
@@ -42,6 +44,7 @@ AFRAME.registerShader('buildings', {
      * `update` used to update the material. Called on initialization and when data updates.
      */
     update: function (data) {
+        this.material.uniforms.elevation.value = data.elevation;
         this.material.uniforms.xProportion.value = data.xProportion;
         this.material.uniforms.zProportion.value = data.zProportion;
         this.material.uniforms.yProportion.value = data.yProportion;

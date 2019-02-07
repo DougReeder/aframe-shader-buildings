@@ -68,6 +68,8 @@
                 buildingEls[5].setAttribute('wall-color', '#a5a696');
 
                 for (let s=0; s<numStyles; ++s) {
+                    buildingEls[s].setAttribute('elevation-geometry', 10);
+                    buildingEls[s].setAttribute('elevation-material', 10);
                     buildingEls[s].setAttribute('sun-position', "-0.5 1.0 1.0");
                     buildingEls[s].setAttribute('buildings', JSON.stringify(buildings[s]));
                     buildingEls[s].classList.add('landscape');
@@ -148,12 +150,14 @@
 </head>
 <body>
 <a-scene city gridhelperXXX="size: 2000; divisions: 400" stats>
-    <a-plane position="0 -0.05 0" rotation="-90 0 0" width="2000" height="2000" color="#338e60"></a-plane>
+    <a-plane position="0 9.95 0" rotation="-90 0 0" width="2000" height="2000" color="#338e60"></a-plane>
 
     <!-- The "Burj Synthetica" -->
-    <a-shader-buildings sun-position="-0.5 1.0 1.0" buildings=
+    <a-shader-buildings elevation-geometry="10" elevation-material="10" sun-position="-0.5 1.0 1.0" buildings=
             '[{"x":5,"z":-995,"xCoreSections":7,"xWingSections":5,"zCoreSections":7,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xCoreSections":5,"xWingSections":4,"zCoreSections":5,"zWingSections":4,"ySections":30},{"x":-5,"z":-1005,"y":240,"xCoreSections":3,"xWingSections":3,"zCoreSections":3,"zWingSections":3,"ySections":30},{"x":-5,"z":-1005,"y":360,"xCoreSections":2,"xWingSections":1,"zCoreSections":2,"zWingSections":1,"ySections":30}]'
     ></a-shader-buildings>
+
+    <a-entity camera="active:true" look-controls wasd-controls position="0 11.6 0"></a-entity>
 
     <a-simple-sun-sky sun-position="-0.5 1.0 1.0"></a-simple-sun-sky>
     <a-entity light="type: ambient; color: #BBB"></a-entity>

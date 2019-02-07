@@ -5,10 +5,11 @@ import buildingsShader from './buildingsShader';
 
 AFRAME.registerGeometry('ell', {
     schema: {
+        elevation: {type: 'number', default: 0},
         xProportion: {type: 'number', default: 5, min: 1},
         zProportion: {type: 'number', default: 5, min: 1},
         yProportion: {type: 'number', default: 4, min: 2},
-        // JSON array of objects with fields x, z, y, xSections, xWingSections, zSections, zWingSections, ySections
+        // JSON array of objects with fields x, z, y, xCoreSections, xWingSections, zSections, zWingSections, ySections
         buildings: {type: 'string', default: '[{}]'}
     },
     init: function (data) {
@@ -22,7 +23,7 @@ AFRAME.registerGeometry('ell', {
 
             let x = buildings[i].x || 0;
             let z = buildings[i].z || 0;
-            let y = buildings[i].y || 0;
+            let y = data.elevation + (buildings[i].y || 0);
 
             let xCoreSections = Math.max(buildings[i].xCoreSections || 2, 1);
             let xWingSections = Math.max(buildings[i].xWingSections || 0, 0);
@@ -37,7 +38,7 @@ AFRAME.registerGeometry('ell', {
 
             let yRoof = y + (buildings[i].ySections || 1) * data.yProportion;
 
-            // console.log("xSections:", xSections, "   xWingSections:", xWingSections,
+            // console.log("xCoreSections:", xCoreSections, "   xWingSections:", xWingSections,
             //     "   xWingLength:", xWingLength, "   zCoreLength:", zCoreLength);
 
             geometry.vertices.push(new THREE.Vector3(x, y, z));
@@ -94,11 +95,13 @@ AFRAME.registerPrimitive('a-shader-buildings', {
     },
 
     mappings: {
+        'elevation-geometry': 'geometry.elevation',
         'x-proportion-geometry': 'geometry.xProportion',
         'z-proportion-geometry': 'geometry.zProportion',
         'y-proportion-geometry': 'geometry.yProportion',
         'buildings': 'geometry.buildings',
 
+        'elevation-material': 'material.elevation',
         'x-proportion-material': 'material.xProportion',
         'z-proportion-material': 'material.zProportion',
         'y-proportion-material': 'material.yProportion',
