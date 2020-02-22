@@ -112,6 +112,9 @@ Currently, all tiers are ell-shaped.
 * ySections: # stories in the tier. Add up to about 0.4 to give a tier some attic space.
 
 
+### rotation
+Buildings should only be rotated in 90-degree increments.
+
 
 Development
 ---

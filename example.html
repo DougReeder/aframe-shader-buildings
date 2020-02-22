@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <title>aframe-shader-buildings example</title>
     <meta name="description" content="A low-cost VR city, using aframe-shader-buildings">
-    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="dist/main.js"></script>
     <script src="https://unpkg.com/aframe-simple-sun-sky@^1.2.0/simple-sun-sky.js"></script>
-    <script src="https://rawgit.com/dbradleyfl/aframe-gridhelper/master/dist/aframe-gridhelper-component.min.js"></script>
     <script>
         AFRAME.registerComponent('city', {
             init: function () {
@@ -41,7 +40,7 @@
                 buildingEls[2].setAttribute('y-proportion-material', 4.5);
                 buildingEls[2].setAttribute('window-width', -0.5);
                 buildingEls[2].setAttribute('window-height', 0.3);
-                buildingEls[2].setAttribute('wall-color', '#6e2b11');   // brick red
+                buildingEls[2].setAttribute('wall-color', '#675342');   // brown brick
 
                 buildingEls[3] = document.createElement('a-shader-buildings');
                 buildingEls[3].setAttribute('x-proportion-geometry', 6);
