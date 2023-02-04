@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>aframe-shader-buildings example</title>
     <meta name="description" content="A low-cost VR city, using aframe-shader-buildings">
-    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@^v6.1.1/dist/aframe-extras.controls.min.js"></script>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@fb96ab2/dist/aframe-extras.controls.min.js"></script>
     <script src="dist/main.js"></script>
-    <script src="https://unpkg.com/aframe-simple-sun-sky@^1.2.0/simple-sun-sky.js"></script>
+    <script src="https://unpkg.com/aframe-simple-sun-sky@^1.2.3/simple-sun-sky.js"></script>
     <script>
         AFRAME.registerComponent('city', {
             init: function () {
@@ -157,13 +157,13 @@
             '[{"x":5,"z":-995,"xCoreSections":7,"xWingSections":5,"zCoreSections":7,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xCoreSections":5,"xWingSections":4,"zCoreSections":5,"zWingSections":4,"ySections":30},{"x":-5,"z":-1005,"y":240,"xCoreSections":3,"xWingSections":3,"zCoreSections":3,"zWingSections":3,"ySections":30},{"x":-5,"z":-1005,"y":360,"xCoreSections":2,"xWingSections":1,"zCoreSections":2,"zWingSections":1,"ySections":30}]'
     ></a-shader-buildings>
 
-    <a-entity id="rig" movement-controls="fly:true; speed:0.6;" position="0 10 0">
+    <a-entity id="rig" movement-controls="fly:true; speed:0.9;" position="0 10 0">
         <a-entity camera look-controls position="0 1.6 0"></a-entity>
     </a-entity>
 
-    <a-simple-sun-sky radius="1500" sun-position="-0.5 1.0 1.0"></a-simple-sun-sky>
+    <a-simple-sun-sky radius="1500" sun-position="-0.1 0.2 1.0"></a-simple-sun-sky>
     <a-entity light="type: ambient; color: #BBB"></a-entity>
-    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.1 0.2 1.0"></a-entity>
 </a-scene>
 </body>
 </html>
