@@ -1,5 +1,5 @@
 // index.js - boxy buildings using a fast shader for A-Frame WebXR
-// Copyright © 2019 by P. Douglas Reeder under the MIT License
+// Copyright © 2019,2023 by P. Douglas Reeder under the MIT License
 
 import buildingsShader from './buildingsShader';
 
@@ -15,8 +15,12 @@ AFRAME.registerGeometry('ell', {
     init: function (data) {
         // console.log("xProportion:", data.xProportion, "   zProportion:", data.zProportion);
         // console.log("typeof data.buildings:", typeof data.buildings, "   data.buildings:", data.buildings);
-        let buildings = JSON.parse(data.buildings);
-        var geometry = new THREE.Geometry();
+        const buildings = JSON.parse(data.buildings);
+        const VPB = 6 * 4 + 6;   // vertexes per building
+        const CPB = VPB * 3;   // coordinates per building
+        const positions = new Float32Array(buildings.length * CPB);
+        const normals = new Float32Array(buildings.length * CPB);
+        const indexes = [];
 
         for (let i=0; i< buildings.length; ++i) {
             // console.log("buildings["+i+"]:", buildings[i]);
@@ -41,43 +45,65 @@ AFRAME.registerGeometry('ell', {
             // console.log("xCoreSections:", xCoreSections, "   xWingSections:", xWingSections,
             //     "   xWingLength:", xWingLength, "   zCoreLength:", zCoreLength);
 
-            geometry.vertices.push(new THREE.Vector3(x, y, z));
-            geometry.vertices.push(new THREE.Vector3(x + xWingLength, y, z));
-            geometry.vertices.push(new THREE.Vector3(x + xWingLength, y, z - zCoreLength));
-            geometry.vertices.push(new THREE.Vector3(x - xCoreLength, y, z - zCoreLength));
-            geometry.vertices.push(new THREE.Vector3(x - xCoreLength, y, z + zWingLength));
-            geometry.vertices.push(new THREE.Vector3(x, y, z + zWingLength));
-            geometry.vertices.push(new THREE.Vector3(x, yRoof, z));
-            geometry.vertices.push(new THREE.Vector3(x + xWingLength, yRoof, z));
-            geometry.vertices.push(new THREE.Vector3(x + xWingLength, yRoof, z - zCoreLength));
-            geometry.vertices.push(new THREE.Vector3(x - xCoreLength, yRoof, z - zCoreLength));
-            geometry.vertices.push(new THREE.Vector3(x - xCoreLength, yRoof, z + zWingLength));
-            geometry.vertices.push(new THREE.Vector3(x, yRoof, z + zWingLength));
+            positions.set([x, y, z], i*CPB + 0);
+            positions.set([x + xWingLength, y, z], i*CPB + 3);
+            positions.set([x + xWingLength, yRoof, z], i*CPB + 6);
+            positions.set([x, yRoof, z], i*CPB + 9);
+            normals.set([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1], i*CPB + 0);
+            indexes.push(i*VPB + 0, i*VPB + 1, i*VPB + 2,   i*VPB + 2,  i*VPB + 3, i*VPB + 0);
 
-            geometry.faces.push(new THREE.Face3(12 * i + 0, 12 * i + 1, 12 * i + 7));
-            geometry.faces.push(new THREE.Face3(12 * i + 0, 12 * i + 7, 12 * i + 6));
-            geometry.faces.push(new THREE.Face3(12 * i + 1, 12 * i + 2, 12 * i + 8));
-            geometry.faces.push(new THREE.Face3(12 * i + 1, 12 * i + 8, 12 * i + 7));
-            geometry.faces.push(new THREE.Face3(12 * i + 2, 12 * i + 3, 12 * i + 9));
-            geometry.faces.push(new THREE.Face3(12 * i + 2, 12 * i + 9, 12 * i + 8));
-            geometry.faces.push(new THREE.Face3(12 * i + 3, 12 * i + 4, 12 * i + 10));
-            geometry.faces.push(new THREE.Face3(12 * i + 3, 12 * i + 10, 12 * i + 9));
-            geometry.faces.push(new THREE.Face3(12 * i + 4, 12 * i + 5, 12 * i + 11));
-            geometry.faces.push(new THREE.Face3(12 * i + 4, 12 * i + 11, 12 * i + 10));
-            geometry.faces.push(new THREE.Face3(12 * i + 5, 12 * i + 0, 12 * i + 6));
-            geometry.faces.push(new THREE.Face3(12 * i + 5, 12 * i + 6, 12 * i + 11));
+            positions.set([x + xWingLength, y, z], i*CPB + 4*3);
+            positions.set([x + xWingLength, y, z - zCoreLength], i*CPB + 5*3);
+            positions.set([x + xWingLength, yRoof, z - zCoreLength], i*CPB + 6*3);
+            positions.set([x + xWingLength, yRoof, z], i*CPB + 7*3);
+            normals.set([1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 ], i*CPB + 12);
+            indexes.push(i*VPB + 4, i*VPB + 5, i*VPB + 6,   i*VPB + 6, i*VPB + 7, i*VPB + 4);
+
+            positions.set([x + xWingLength, y, z - zCoreLength], i*CPB + 8*3);
+            positions.set([x - xCoreLength, y, z - zCoreLength], i*CPB + 9*3);
+            positions.set([x - xCoreLength, yRoof, z - zCoreLength], i*CPB + 10*3);
+            positions.set([x + xWingLength, yRoof, z - zCoreLength], i*CPB + 11*3);
+            normals.set([0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1], i*CPB + 24);
+            indexes.push(i*VPB + 8, i*VPB + 9, i*VPB + 10,  i*VPB + 10, i*VPB + 11, i*VPB + 5);
+
+            positions.set([x - xCoreLength, y, z - zCoreLength], i*CPB + 12*3);
+            positions.set([x - xCoreLength, y, z + zWingLength], i*CPB + 13*3);
+            positions.set([x - xCoreLength, yRoof, z + zWingLength], i*CPB + 14*3);
+            positions.set([x - xCoreLength, yRoof, z - zCoreLength], i*CPB + 15*3);
+            normals.set([-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0], i*CPB + 36);
+            indexes.push(i*VPB + 12, i*VPB + 13, i*VPB + 14,  i*VPB + 14, i*VPB + 15, i*VPB + 12);
+
+            positions.set([x - xCoreLength, y, z + zWingLength], i*CPB + 16*3);
+            positions.set([x, y, z + zWingLength], i*CPB + 17*3);
+            positions.set([x, yRoof, z + zWingLength], i*CPB + 18*3);
+            positions.set([x - xCoreLength, yRoof, z + zWingLength], i*CPB + 19*3);
+            normals.set([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1], i*CPB + 48);
+            indexes.push(i*VPB + 16, i*VPB + 17, i*VPB + 18,  i*VPB + 18, i*VPB + 19, i*VPB + 16);
+
+            positions.set([x, y, z + zWingLength], i*CPB + 20*3);
+            positions.set([x, y, z], i*CPB + 21*3);
+            positions.set([x, yRoof, z], i*CPB + 22*3);
+            positions.set([x, yRoof, z + zWingLength], i*CPB + 23*3);
+            normals.set([1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0], i*CPB + 60);
+            indexes.push(i*VPB + 20, i*VPB + 21, i*VPB + 22,  i*VPB + 22, i*VPB + 23, i*VPB + 20);
+
             // TODO: replace these faces with a separate roof using a different shader
-            geometry.faces.push(new THREE.Face3(12 * i + 6, 12 * i + 7, 12 * i + 8));
-            geometry.faces.push(new THREE.Face3(12 * i + 8, 12 * i + 9, 12 * i + 6));
-            geometry.faces.push(new THREE.Face3(12 * i + 9, 12 * i + 10, 12 * i + 6));
-            geometry.faces.push(new THREE.Face3(12 * i + 10, 12 * i + 11, 12 * i + 6));
+            positions.set([x, yRoof, z], i*CPB + 24*3);
+            positions.set([x + xWingLength, yRoof, z], i*CPB + 25*3);
+            positions.set([x + xWingLength, yRoof, z - zCoreLength], i*CPB + 26*3);
+            positions.set([x - xCoreLength, yRoof, z - zCoreLength], i*CPB + 27*3);
+            positions.set([x - xCoreLength, yRoof, z + zWingLength], i*CPB + 28*3);
+            positions.set([x, yRoof, z + zWingLength], i*CPB + 29*3);
+            normals.set([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], i*CPB + 72);
+            indexes.push(i*VPB + 24, i*VPB + 25, i*VPB + 26,  i*VPB + 26, i*VPB + 27, i*VPB + 24,  i*VPB + 27, i*VPB + 28, i*VPB + 24,  i*VPB + 28, i*VPB + 29, i*VPB + 24);
         }
 
-        geometry.computeBoundingBox();
-        geometry.mergeVertices();
-        geometry.computeFaceNormals();
-        geometry.computeVertexNormals();
-        this.geometry = geometry;
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        this.geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+        this.geometry.setIndex(indexes);
+
+        this.geometry.computeBoundingBox();
     }
 });
 

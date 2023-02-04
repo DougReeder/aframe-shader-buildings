@@ -17,7 +17,7 @@ Usage
 
 Include using 
 ```html
-<script src="https://unpkg.com/aframe-shader-buildings@^0.7.1/dist/main.js"></script>
+<script src="https://unpkg.com/aframe-shader-buildings@^1.0.0/dist/main.js"></script>
 ```
 
 
@@ -28,7 +28,7 @@ Declaration of a single two-tiered building:
 ></a-shader-buildings>
 ```
 The `buildings` attribute is JSON, which is problematic in HTML attributes.  
-Normally, the `buildings` attribute is set programatically (see example.html).
+So normally, the `buildings` attribute is set programmatically (see example.html).
 The recommended workaround for declaring in HTML is 
 to use single quotes around the attribute value, which all modern browsers parse correctly 
 (but an HTML linter will complain about).
@@ -42,7 +42,7 @@ Placing a building on a slope requires careful planning to keep windows from bei
 
 Parameters 
 ---
-Typically, you'll leave the entity x, y, and z as zero, but you don't have to.
+Typically, you'll set the positions of buildings in the `buildings` element, and leave the entity x, y, and z as zero, but you don't have to.
 
 ### elevation-geometry, elevation-material
 default: 0
@@ -118,13 +118,14 @@ Buildings should only be rotated in 90-degree increments.
 
 Development
 ---
-`npm install`
+1. `npm install`
 
-edit files
+2. edit files
 
+3. `npm run develop`
+
+4. when ready to commit:
 `npm run build`
-
-
 
 
 Internals
