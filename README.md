@@ -2,28 +2,30 @@ aframe-shader-buildings
 ===
 
 An [A-Frame](https://aframe.io) [WebXR](https://webvr.info/) component for cheaply creating boxy buildings.
-Allows you to place thousands of buildings in your scene!
-Details are perfectly sharp, no matter how close you get.
+Allows you to place thousands of buildings in your scene, without using up your GPU budget!
 
 ![sample screenshot](sample.png)
 
 [live example scene](https://dougreeder.github.io/aframe-shader-buildings/example.html)
 On desktop, drag to turn and use WASD keys to move. 
 
-[flyable city from Elfland Glider](https://elfland-glider.surge.sh/city/)
+[flyable city from Elfland Glider](https://dougreeder.github.io/elfland-glider/city/)
 
 Usage
 ---
 
 Include using 
 ```html
-<script src="https://unpkg.com/aframe-shader-buildings@^1.0.0/dist/main.js"></script>
+<script src="https://unpkg.com/aframe-shader-buildings@^1.1.0beta/dist/main.js"></script>
 ```
 
 
 Declaration of a single two-tiered building:
 ```html
-<a-shader-buildings sun-position="-0.5 1.0 1.0" buildings=
+<a-assets>
+    <img id="brick" src="./assets/TexturesCom_Wall_BrickPlain1_512_albedo.jpg">
+</a-assets>
+<a-shader-buildings sun-position="-0.5 1.0 1.0" wall-src="#brick" wall-color="#675342" buildings=
 		'[{"x":5,"z":-995,"xCoreSections":7,"xWingSections":5,"zSections":12,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xCoreSections":5,"xWingSections":4,"zSections":9,"zWingSections":4,"ySections":30}]'
 ></a-shader-buildings>
 ```
@@ -64,7 +66,7 @@ set these to the same value - this is the length of a section of wall that conta
 ### y-proportion-geometry, y-proportion-material
 default: 4
 
-set these to the same value - this is the height of a story in meters
+set these to the same value - this is the height of a storey in meters
 
 ### window-width
 default: 0.0 (half the section is window)
@@ -78,12 +80,23 @@ default: -0.4
 min: -1.0
 max: 1.0
 
-proportion of a story which is window
+proportion of a storey which is window
+
+### wall-src
+default: none
+
+a reference to a square image for the texture of the walls
+
+### wall-zoom
+default: 2.0
+min: 0.001
+
+the number of linear meters that one texture image will cover
 
 ### wall-color
 default: '#909090'
 
-the base color of walls
+the base color of walls, if `wall-src` is not set or hasn't loaded yet
 
 ### window-color
 default: '#181818'

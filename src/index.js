@@ -133,6 +133,8 @@ AFRAME.registerPrimitive('a-shader-buildings', {
         'y-proportion-material': 'material.yProportion',
         'window-width': 'material.windowWidth',
         'window-height': 'material.windowHeight',
+        'wall-src': 'material.wallSrc',
+        'wall-zoom': 'material.wallZoom',
         'wall-color': 'material.wallColor',
         'window-color': 'material.windowColor',
         'sun-position': 'material.sunPosition',

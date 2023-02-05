@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>aframe-shader-buildings simple example</title>
+    <meta name="description" content="A simple example of aframe-shader-buildings">
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@fb96ab2/dist/aframe-extras.controls.min.js"></script>
+    <script src="dist/main.js"></script>
+    <script src="https://unpkg.com/aframe-simple-sun-sky@^1.2.3/simple-sun-sky.js"></script>
+</head>
+<body>
+<a-scene background="color:#87cefa">
+    <a-assets>
+        <img id="brick" src="./assets/TexturesCom_Wall_BrickPlain1_512_albedo.jpg">
+    </a-assets>
+
+    <a-shader-buildings sun-position="-0.1 0.2 1.0" wall-src="#brick" wall-color="#675342" buildings=
+            '[{"x":-5,"z":-25,"xCoreSections":3,"xWingSections":5,"zCoreSections":2,"zWingSections":3,"ySections":5}]'
+    ></a-shader-buildings>
+
+    <a-entity id="rig" movement-controls="fly:true; speed:0.6;" position="0 0 10">
+        <a-entity camera look-controls position="0 1.6 0"></a-entity>
+    </a-entity>
+
+    <a-plane position="0 -0.05 0" rotation="-90 0 0" width="2000" height="2000" color="#338e60"></a-plane>
+
+    <a-simple-sun-sky radius="1500" sun-position="-0.1 0.2 1.0"></a-simple-sun-sky>
+    <a-entity light="type: ambient; color: #BBB"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.1 0.2 1.0"></a-entity>
+</a-scene>
+</body>
+</html>

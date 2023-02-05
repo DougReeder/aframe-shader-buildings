@@ -7,6 +7,9 @@ uniform float zProportion;
 uniform float yProportion;
 uniform float windowWidth;
 uniform float windowHeight;
+uniform bool useWallMap;
+uniform sampler2D wallMap;
+uniform float wallZoom;
 uniform vec3 wallColor;
 uniform vec3 windowColor;
 
@@ -22,7 +25,10 @@ void main() {
 
     float yy1 = step(windowHeight, sin((pos.y - elevation) * 2.0 * PI / yProportion - 2.0));
 
-    vec3 inherentColor = mix(wallColor, windowColor, (xx1 * xx2 + zz1 * zz2) * yy1);
+    vec3 wallPixelColor = useWallMap ?
+        texture2D(wallMap, vec2((pos.x+pos.z)/wallZoom, pos.y/wallZoom)).rgb :
+        wallColor;
+    vec3 inherentColor = mix(wallPixelColor, windowColor, (xx1 * xx2 + zz1 * zz2) * yy1);
 
     gl_FragColor = vec4(inherentColor * sunFactor, 1.0);
 }
