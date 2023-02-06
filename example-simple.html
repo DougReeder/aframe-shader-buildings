@@ -15,19 +15,19 @@
         <img id="brick" src="./assets/TexturesCom_Wall_BrickPlain1_512_albedo.jpg">
     </a-assets>
 
-    <a-shader-buildings sun-position="-0.1 0.2 1.0" wall-src="#brick" wall-color="#675342" buildings=
-            '[{"x":-5,"z":-25,"xCoreSections":3,"xWingSections":5,"zCoreSections":2,"zWingSections":3,"ySections":5}]'
+    <a-shader-buildings sun-position="-0.3 1.0 0.7" wall-src="#brick" wall-color="#675342" buildings=
+            '[{"x":-5,"z":-25,"xCoreSections":3,"xWingSections":5,"zCoreSections":2,"zWingSections":3,"ySections":2}]'
     ></a-shader-buildings>
 
-    <a-entity id="rig" movement-controls="fly:true; speed:0.6;" position="0 0 10">
+    <a-entity id="rig" movement-controls="fly:true; speed:0.6;" position="0 12 5">
         <a-entity camera look-controls position="0 1.6 0"></a-entity>
     </a-entity>
 
-    <a-plane position="0 -0.05 0" rotation="-90 0 0" width="2000" height="2000" color="#338e60"></a-plane>
+    <a-plane position="0 -0.05 0" rotation="-90 0 0" width="2000" height="2000" color="#276B48"></a-plane>
 
-    <a-simple-sun-sky radius="1500" sun-position="-0.1 0.2 1.0"></a-simple-sun-sky>
+    <a-simple-sun-sky sun-position="-0.3 1.0 0.7"></a-simple-sun-sky>
     <a-entity light="type: ambient; color: #BBB"></a-entity>
-    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.1 0.2 1.0"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.3 1.0 0.7"></a-entity>
 </a-scene>
 </body>
 </html>

@@ -62,25 +62,25 @@
                 buildingEls[3].setAttribute('wall-color', '#a0a0a0');   // light gray
 
                 buildingEls[4] = document.createElement('a-shader-buildings');
-                buildingEls[4].setAttribute('window-width', 0.8);
-                buildingEls[4].setAttribute('window-height', -0.1);
+                buildingEls[4].setAttribute('y-proportion-geometry', 5);
+                buildingEls[4].setAttribute('y-proportion-material', 5);
+                buildingEls[4].setAttribute('window-width', 0.5);
+                buildingEls[4].setAttribute('window-height', 0.0);
                 buildingEls[4].setAttribute('wall-src', '#stoneBlocks');
-                buildingEls[4].setAttribute('wall-zoom', 5.0);
-                buildingEls[4].setAttribute('wall-color', '#675342');   // brown brick
+                buildingEls[4].setAttribute('wall-zoom', 4.5);
+                buildingEls[4].setAttribute('wall-color', '#909090');   // light gray
 
                 buildingEls[5] = document.createElement('a-shader-buildings');
-                buildingEls[5].setAttribute('y-proportion-geometry', 5);
-                buildingEls[5].setAttribute('y-proportion-material', 5);
-                buildingEls[5].setAttribute('window-width', 0.5);
-                buildingEls[5].setAttribute('window-height', 0.0);
+                buildingEls[5].setAttribute('window-width', 0.8);
+                buildingEls[5].setAttribute('window-height', -0.1);
                 buildingEls[5].setAttribute('wall-src', '#stoneBlocks');
-                buildingEls[5].setAttribute('wall-zoom', 4.5);
-                buildingEls[5].setAttribute('wall-color', '#909090');   // light gray
+                buildingEls[5].setAttribute('wall-zoom', 5.0);
+                buildingEls[5].setAttribute('wall-color', '#675342');   // brown brick
 
                 for (let s=0; s<numStyles; ++s) {
                     buildingEls[s].setAttribute('elevation-geometry', 10);
                     buildingEls[s].setAttribute('elevation-material', 10);
-                    buildingEls[s].setAttribute('sun-position', "-0.1 0.2 1.0");
+                    buildingEls[s].setAttribute('sun-position', "-0.3 1.0 0.7");
                     buildingEls[s].setAttribute('buildings', JSON.stringify(buildings[s]));
                     buildingEls[s].classList.add('landscape');
                     sceneEl.appendChild(buildingEls[s]);
@@ -137,16 +137,16 @@
                         };
 
                         let style = Math.floor(Math.random() * numStyles);
-                        if (style < numStyles/2) {
+                        if (0 === style % 2) {
                             // makes some walls blank (only works if windowWidth is not too great)
                             if (zCoreSections <= 2 && Math.random() < 0.3) {
-                                building.xWingSections += 0.15;
+                                building.xWingSections += 0.13;
                             } else if (xCoreSections <= 2 && Math.random() < 0.3) {
-                                building.zWingSections += 0.15;
+                                building.zWingSections += 0.13;
                             } else if (zCoreSections + zWingSections <= 4.5 && Math.random() < 0.1) {
-                                building.xCoreSections += 0.15;
+                                building.xCoreSections += 0.13;
                             } else if (xCoreSections + xWingSections <= 4.5 && Math.random() < 0.1) {
-                                building.zCoreSections += 0.15;
+                                building.zCoreSections += 0.13;
                             }
                         }
                         buildings[style].push(building);
@@ -167,20 +167,20 @@
         <img id="stoneBlocks" src="./assets/TexturesCom_BrickMedievalBlocks0327_5_seamless_S_512.jpeg">
     </a-assets>
 
-    <a-plane position="0 9.95 0" rotation="-90 0 0" width="2000" height="2000" color="#338e60"></a-plane>
+    <a-plane position="0 9.95 0" rotation="-90 0 0" width="2000" height="2000" color="#276B48"></a-plane>
 
     <!-- The "Burj Synthetica" -->
-    <a-shader-buildings elevation-geometry="10" elevation-material="10" sun-position="-0.5 1.0 1.0" buildings=
+    <a-shader-buildings elevation-geometry="10" elevation-material="10" sun-position="-0.3 1.0 0.7" buildings=
             '[{"x":5,"z":-995,"xCoreSections":7,"xWingSections":5,"zCoreSections":7,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xCoreSections":5,"xWingSections":4,"zCoreSections":5,"zWingSections":4,"ySections":30},{"x":-5,"z":-1005,"y":240,"xCoreSections":3,"xWingSections":3,"zCoreSections":3,"zWingSections":3,"ySections":30},{"x":-5,"z":-1005,"y":360,"xCoreSections":2,"xWingSections":1,"zCoreSections":2,"zWingSections":1,"ySections":30}]'
     ></a-shader-buildings>
 
-    <a-entity id="rig" movement-controls="fly:true; speed:0.9;" position="0 10 0">
+    <a-entity id="rig" movement-controls="fly:true; speed:0.9;" position="0 32 0">
         <a-entity camera look-controls position="0 1.6 0"></a-entity>
     </a-entity>
 
-    <a-simple-sun-sky radius="1500" sun-position="-0.1 0.2 1.0"></a-simple-sun-sky>
+    <a-simple-sun-sky radius="1500" sun-position="-0.3 1.0 0.7"></a-simple-sun-sky>
     <a-entity light="type: ambient; color: #BBB"></a-entity>
-    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.1 0.2 1.0"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.3 1.0 0.7"></a-entity>
 </a-scene>
 </body>
 </html>

@@ -3,7 +3,7 @@
   "version": "1.1.0beta",
   "description": "An A-Frame WebVR component for cheaply creating thousands of boxy buildings.",
   "scripts": {
-    "develop": "webpack --mode=development --watch",
+    "watch": "webpack --mode=development --watch",
     "build": "webpack --mode=production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

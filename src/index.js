@@ -21,6 +21,7 @@ AFRAME.registerGeometry('ell', {
         const positions = new Float32Array(buildings.length * CPB);
         const normals = new Float32Array(buildings.length * CPB);
         const indexes = [];
+        const intensityTweak = new Float32Array(buildings.length * VPB);
 
         for (let i=0; i< buildings.length; ++i) {
             // console.log("buildings["+i+"]:", buildings[i]);
@@ -64,7 +65,7 @@ AFRAME.registerGeometry('ell', {
             positions.set([x - xCoreLength, yRoof, z - zCoreLength], i*CPB + 10*3);
             positions.set([x + xWingLength, yRoof, z - zCoreLength], i*CPB + 11*3);
             normals.set([0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1], i*CPB + 24);
-            indexes.push(i*VPB + 8, i*VPB + 9, i*VPB + 10,  i*VPB + 10, i*VPB + 11, i*VPB + 5);
+            indexes.push(i*VPB + 8, i*VPB + 9, i*VPB + 10,  i*VPB + 10, i*VPB + 11, i*VPB + 8);
 
             positions.set([x - xCoreLength, y, z - zCoreLength], i*CPB + 12*3);
             positions.set([x - xCoreLength, y, z + zWingLength], i*CPB + 13*3);
@@ -87,7 +88,20 @@ AFRAME.registerGeometry('ell', {
             normals.set([1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0], i*CPB + 60);
             indexes.push(i*VPB + 20, i*VPB + 21, i*VPB + 22,  i*VPB + 22, i*VPB + 23, i*VPB + 20);
 
-            // TODO: replace these faces with a separate roof using a different shader
+            const buildingIntensityChange = 0.50 + Math.random()/2;
+            for (let v = i * VPB; v < i * VPB + 6 * 4; ++v) {
+                intensityTweak[v] = buildingIntensityChange + Math.random()/2;
+            }
+            if (0 === zWingSections) {   // ensures there's no visible seam
+                intensityTweak[i * VPB + 17] = intensityTweak[i * VPB];
+                intensityTweak[i * VPB + 18] = intensityTweak[i * VPB + 3];
+            }
+            if (0 === xWingSections) {   // ensures there's no visible seam
+                intensityTweak[i * VPB + 21] = intensityTweak[i * VPB + 4];
+                intensityTweak[i * VPB + 22] = intensityTweak[i * VPB + 7];
+            }
+
+            // roof
             positions.set([x, yRoof, z], i*CPB + 24*3);
             positions.set([x + xWingLength, yRoof, z], i*CPB + 25*3);
             positions.set([x + xWingLength, yRoof, z - zCoreLength], i*CPB + 26*3);
@@ -96,12 +110,18 @@ AFRAME.registerGeometry('ell', {
             positions.set([x, yRoof, z + zWingLength], i*CPB + 29*3);
             normals.set([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], i*CPB + 72);
             indexes.push(i*VPB + 24, i*VPB + 25, i*VPB + 26,  i*VPB + 26, i*VPB + 27, i*VPB + 24,  i*VPB + 27, i*VPB + 28, i*VPB + 24,  i*VPB + 28, i*VPB + 29, i*VPB + 24);
+
+            const minRoofIntensity = Math.random()/3;
+            for (let v = i * VPB + 6 * 4; v < (i+1) * VPB; ++v) {
+                intensityTweak[v] = -(minRoofIntensity + Math.random()/8);
+            }
         }
 
         this.geometry = new THREE.BufferGeometry();
         this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         this.geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
         this.geometry.setIndex(indexes);
+        this.geometry.setAttribute('intensityTweak', new THREE.BufferAttribute(intensityTweak, 1));
 
         this.geometry.computeBoundingBox();
     }

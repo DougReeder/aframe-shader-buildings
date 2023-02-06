@@ -85,7 +85,8 @@ proportion of a storey which is window
 ### wall-src
 default: none
 
-a reference to a square image for the texture of the walls
+a reference to a square image for the texture of the walls.
+The intensity of the texture will be tweaked so each building looks a bit different.
 
 ### wall-zoom
 default: 2.0
@@ -97,6 +98,7 @@ the number of linear meters that one texture image will cover
 default: '#909090'
 
 the base color of walls, if `wall-src` is not set or hasn't loaded yet
+The intensity of the color will be tweaked so each building looks a bit different.
 
 ### window-color
 default: '#181818'
