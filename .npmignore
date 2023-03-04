@@ -1,0 +1,10 @@
+
+.idea
+aframe-shader-buildings.iml
+webpack.config.js
+
+.gitignore~
+.DS_Store
+logs
+*.log
+npm-debug.log*
