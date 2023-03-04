@@ -12,7 +12,7 @@ AFRAME.registerShader('buildings', {
         yProportion: {type: 'number', default: 4},
         windowWidth: {type: 'number', default: 0.0, min: -1.0, max: 1.0},
         windowHeight: {type: 'number', default: -0.4, min: -1.0, max: 1.0},
-        wallMap: {type: 'map'},
+        wallSrc: {type: 'selector'},
         wallZoom: {type: 'number', default: 2.0, min: 0.001},
         wallColor: {type: 'color', default: '#909090'},   // off-white, like concrete
         windowColor: {type: 'color', default: '#181818'},   // dark gray, like tinted windows
@@ -73,11 +73,10 @@ AFRAME.registerShader('buildings', {
     },
 
     loadTexture: function(wallSrc) {
-        const imgEl = document.querySelector(wallSrc);
-        if (imgEl?.currentSrc) {
+        if (wallSrc?.currentSrc) {
             this.wallTexture = null;
             this.textureLoader = new THREE.TextureLoader();
-            this.textureLoader.load(imgEl.currentSrc, texture => {
+            this.textureLoader.load(wallSrc.currentSrc, texture => {
                 this.material.uniforms.wallMap.value = this.wallTexture = texture;
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
