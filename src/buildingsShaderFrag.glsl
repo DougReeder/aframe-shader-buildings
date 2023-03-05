@@ -11,6 +11,8 @@ uniform bool useWallMap;
 uniform sampler2D wallMap;
 uniform float wallZoom;
 uniform vec3 wallColor;
+uniform bool useWindowCube;
+uniform samplerCube windowCube;
 uniform vec3 windowColor;
 
 varying vec3 pos;
@@ -19,7 +21,39 @@ varying float vIntensityTweak;
 // vIntensityTweak > 0: 1.0 is no change to wall color
 // vIntensityTweak <= 0: 0.0 is black, 1.0 is white
 
+varying vec3 vViewDirTangent;
+varying vec2 vUv;
+
+float min3 (vec3 v) {
+    return min (min (v.x, v.y), v.z);
+}
+
 void main() {
+    vec3 wallIdealColor = useWallMap ?
+        texture2D(wallMap, vec2((pos.x+pos.z)/wallZoom, pos.y/wallZoom)).rgb :
+        wallColor;
+
+    vec3 wallTweakedColor = vIntensityTweak > 0.0 ?
+        wallIdealColor * vec3(vIntensityTweak) :
+        vec3(-vIntensityTweak);
+
+    vec4 wallPixelColor = vec4(wallTweakedColor * sunFactor, 1.);
+
+
+    vec2 uv = fract(vUv); // TODO: Multiply by tiling amount
+    vec3 sampleDir = normalize(vViewDirTangent);
+
+    sampleDir *= vec3(-1., -1., 1.);
+    vec3 viewInv = 1. / sampleDir;
+
+    vec3 uvPos = vec3(uv * 2.0 - 1.0, -1.0);
+
+    float fmin = min3(abs(viewInv) - viewInv * uvPos);
+    sampleDir = sampleDir * fmin + uvPos;
+
+    vec4 windowPixelColor = useWindowCube ? texture(windowCube, sampleDir) : vec4(windowColor, 1.);
+
+
     float xx1 = step(windowWidth, sin(pos.x * 2.0 * PI / xProportion - PI / 2.0));
     float xx2 = step(0.8, sin(pos.z * 2.0 * PI / zProportion + PI / 2.0));
 
@@ -28,13 +62,8 @@ void main() {
 
     float yy1 = step(windowHeight, sin((pos.y - elevation) * 2.0 * PI / yProportion - 2.0));
 
-    vec3 wallPixelColor = useWallMap ?
-        texture2D(wallMap, vec2((pos.x+pos.z)/wallZoom, pos.y/wallZoom)).rgb :
-        wallColor;
-    vec3 inherentColor = vIntensityTweak > 0.0 ?
-        mix(wallPixelColor, windowColor, (xx1 * xx2 + zz1 * zz2) * yy1) :
-        vec3(-1.0);  // will be multiplied by negative vIntensityTweak
-    vec3 tweakedColor = inherentColor * vec3(vIntensityTweak);
-
-    gl_FragColor = vec4(tweakedColor * sunFactor, 1.0);
+    gl_FragColor = mix(wallPixelColor, windowPixelColor, (xx1 * xx2 + zz1 * zz2) * yy1);
 }
+
+// Interior cubemap shader code by Mosen Heydari
+// https://github.com/mohsenheydari/three-interior-mapping

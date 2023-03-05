@@ -105,10 +105,23 @@ default: '#909090'
 the base color of walls, if `wall-src` is not set or hasn't loaded yet.
 The intensity of the color will be tweaked so each building looks a bit different.
 
+### px, nx, py, ny, nz
+default: none
+
+references to separate cubemap textures of a building interior, for faux-3D windows
+
+[comment]: <> (### equirect)
+
+[comment]: <> (default: none)
+
+[comment]: <> (reference to equirectangular image of a building interior for cubemap, for faux-3D windows.)
+
+[comment]: <> (Overrides px, etc.)
+
 ### window-color
 default: '#181818'
 
-the base color of windows
+the base color of windows, if px, nx, etc. or equirect is not set or hasn't loaded yet.
 
 ### sun-position
 default: {x:-1.0, y:1.0, z:-1.0}
@@ -156,7 +169,7 @@ The geometry of all buildings of a single entity is merged, so there's only one 
 
 Ell-shaped buildings use only 12 triangles per tier, regardless of the number of windows.
 
-
+The windows aren't part of the geometry nor wall texture - they are added by the shader.
 
 
 To Do
@@ -165,3 +178,12 @@ To Do
 * Use a modified version of a Phong shader, for more realism
 * rotate buildings for more variety
 * More building shapes: tee, cee, plus, eee and box, for starters.
+
+Credits
+---
+Interior cubemap code by Mosen Heydari
+https://github.com/mohsenheydari/three-interior-mapping
+
+Hotel room photos by Emil Persson, aka Humus. http://www.humus.name licensed under a
+Creative Commons Attribution 3.0 Unported License.
+http://creativecommons.org/licenses/by/3.0/

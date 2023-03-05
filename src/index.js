@@ -20,6 +20,8 @@ AFRAME.registerGeometry('ell', {
         const CPB = VPB * 3;   // coordinates per building
         const positions = new Float32Array(buildings.length * CPB);
         const normals = new Float32Array(buildings.length * CPB);
+        const UVCPB = VPB * 2;
+        const uvs = new Float32Array(buildings.length * UVCPB);
         const indexes = [];
         const intensityTweak = new Float32Array(buildings.length * VPB);
 
@@ -41,7 +43,8 @@ AFRAME.registerGeometry('ell', {
             let zCoreLength = zCoreSections * data.zProportion;
             let zWingLength = zWingSections * data.zProportion;
 
-            let yRoof = y + (buildings[i].ySections || 1) * data.yProportion;
+            const ySections = buildings[i].ySections || 1;
+            let yRoof = y + (ySections) * data.yProportion;
 
             // console.log("xCoreSections:", xCoreSections, "   xWingSections:", xWingSections,
             //     "   xWingLength:", xWingLength, "   zCoreLength:", zCoreLength);
@@ -51,6 +54,7 @@ AFRAME.registerGeometry('ell', {
             positions.set([x + xWingLength, yRoof, z], i*CPB + 6);
             positions.set([x, yRoof, z], i*CPB + 9);
             normals.set([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1], i*CPB + 0);
+            uvs.set([0, 0,  xWingSections, 0,  xWingSections, ySections,  0, ySections], i*UVCPB + 0*8);
             indexes.push(i*VPB + 0, i*VPB + 1, i*VPB + 2,   i*VPB + 2,  i*VPB + 3, i*VPB + 0);
 
             positions.set([x + xWingLength, y, z], i*CPB + 4*3);
@@ -58,6 +62,7 @@ AFRAME.registerGeometry('ell', {
             positions.set([x + xWingLength, yRoof, z - zCoreLength], i*CPB + 6*3);
             positions.set([x + xWingLength, yRoof, z], i*CPB + 7*3);
             normals.set([1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 ], i*CPB + 12);
+            uvs.set([0, 0,  zCoreSections, 0,  zCoreSections, ySections,  0, ySections], i*UVCPB + 1*8);
             indexes.push(i*VPB + 4, i*VPB + 5, i*VPB + 6,   i*VPB + 6, i*VPB + 7, i*VPB + 4);
 
             positions.set([x + xWingLength, y, z - zCoreLength], i*CPB + 8*3);
@@ -65,6 +70,7 @@ AFRAME.registerGeometry('ell', {
             positions.set([x - xCoreLength, yRoof, z - zCoreLength], i*CPB + 10*3);
             positions.set([x + xWingLength, yRoof, z - zCoreLength], i*CPB + 11*3);
             normals.set([0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1], i*CPB + 24);
+            uvs.set([0, 0,  xCoreSections+xWingSections, 0,  xCoreSections+xWingSections, ySections,  0, ySections], i*UVCPB + 2*8);
             indexes.push(i*VPB + 8, i*VPB + 9, i*VPB + 10,  i*VPB + 10, i*VPB + 11, i*VPB + 8);
 
             positions.set([x - xCoreLength, y, z - zCoreLength], i*CPB + 12*3);
@@ -72,6 +78,7 @@ AFRAME.registerGeometry('ell', {
             positions.set([x - xCoreLength, yRoof, z + zWingLength], i*CPB + 14*3);
             positions.set([x - xCoreLength, yRoof, z - zCoreLength], i*CPB + 15*3);
             normals.set([-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0], i*CPB + 36);
+            uvs.set([0, 0,  zCoreSections+zWingSections, 0,  zCoreSections+zWingSections, ySections,  0, ySections], i*UVCPB + 3*8);
             indexes.push(i*VPB + 12, i*VPB + 13, i*VPB + 14,  i*VPB + 14, i*VPB + 15, i*VPB + 12);
 
             positions.set([x - xCoreLength, y, z + zWingLength], i*CPB + 16*3);
@@ -79,6 +86,7 @@ AFRAME.registerGeometry('ell', {
             positions.set([x, yRoof, z + zWingLength], i*CPB + 18*3);
             positions.set([x - xCoreLength, yRoof, z + zWingLength], i*CPB + 19*3);
             normals.set([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1], i*CPB + 48);
+            uvs.set([0, 0,  xCoreSections, 0,  xCoreSections, ySections,  0, ySections], i*UVCPB + 4*8);
             indexes.push(i*VPB + 16, i*VPB + 17, i*VPB + 18,  i*VPB + 18, i*VPB + 19, i*VPB + 16);
 
             positions.set([x, y, z + zWingLength], i*CPB + 20*3);
@@ -86,6 +94,7 @@ AFRAME.registerGeometry('ell', {
             positions.set([x, yRoof, z], i*CPB + 22*3);
             positions.set([x, yRoof, z + zWingLength], i*CPB + 23*3);
             normals.set([1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0], i*CPB + 60);
+            uvs.set([0, 0,  zWingSections, 0,  zWingSections, ySections,  0, ySections], i*UVCPB + 5*8);
             indexes.push(i*VPB + 20, i*VPB + 21, i*VPB + 22,  i*VPB + 22, i*VPB + 23, i*VPB + 20);
 
             const buildingIntensityChange = 0.50 + Math.random()/2;
@@ -109,6 +118,7 @@ AFRAME.registerGeometry('ell', {
             positions.set([x - xCoreLength, yRoof, z + zWingLength], i*CPB + 28*3);
             positions.set([x, yRoof, z + zWingLength], i*CPB + 29*3);
             normals.set([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], i*CPB + 72);
+            uvs.set([0.5, 0.5,  1, 0.5,  1, 1,  0, 1,  0, 0,  0.5, 0], i*UVCPB + 6*8);
             indexes.push(i*VPB + 24, i*VPB + 25, i*VPB + 26,  i*VPB + 26, i*VPB + 27, i*VPB + 24,  i*VPB + 27, i*VPB + 28, i*VPB + 24,  i*VPB + 28, i*VPB + 29, i*VPB + 24);
 
             const minRoofIntensity = Math.random()/3;
@@ -120,10 +130,12 @@ AFRAME.registerGeometry('ell', {
         this.geometry = new THREE.BufferGeometry();
         this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         this.geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+        this.geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
         this.geometry.setIndex(indexes);
         this.geometry.setAttribute('intensityTweak', new THREE.BufferAttribute(intensityTweak, 1));
 
         this.geometry.computeBoundingBox();
+        this.geometry.computeTangents();
     }
 });
 
@@ -156,6 +168,11 @@ AFRAME.registerPrimitive('a-shader-buildings', {
         'wall-src': 'material.wallSrc',
         'wall-zoom': 'material.wallZoom',
         'wall-color': 'material.wallColor',
+        'px': 'material.px',
+        'nx': 'material.nx',
+        'py': 'material.py',
+        'ny': 'material.ny',
+        'nz': 'material.nz',
         'window-color': 'material.windowColor',
         'sun-position': 'material.sunPosition',
     }

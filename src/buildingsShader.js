@@ -15,6 +15,12 @@ AFRAME.registerShader('buildings', {
         wallSrc: {type: 'selector'},
         wallZoom: {type: 'number', default: 2.0, min: 0.001},
         wallColor: {type: 'color', default: '#909090'},   // off-white, like concrete
+        px: {type: 'selector'},
+        nx: {type: 'selector'},
+        py: {type: 'selector'},
+        ny: {type: 'selector'},
+        // positive Z is never used - it's the window side of the cube
+        nz: {type: 'selector'},
         windowColor: {type: 'color', default: '#181818'},   // dark gray, like tinted windows
         sunPosition: {type: 'vec3', default: {x:-1.0, y:1.0, z:-1.0}}
     },
@@ -36,6 +42,8 @@ AFRAME.registerShader('buildings', {
             wallMap: {value: null},
             wallZoom: {value: data.wallZoom},
             wallColor: {value: new THREE.Color(data.wallColor)},
+            useWindowCube: {value: false},
+            windowCube: {value: null},
             windowColor: {value: new THREE.Color(data.windowColor)},
             sunNormal: {value: sunPos.normalize()}
         }
@@ -62,6 +70,8 @@ AFRAME.registerShader('buildings', {
         // wallMap must be asynchronously loaded
         this.material.uniforms.wallZoom.value = data.wallZoom
         this.material.uniforms.wallColor.value.set(data.wallColor);
+        // useWindowCube isn't updated from data
+        // windowCube must be asynchronously loaded
         this.material.uniforms.windowColor.value.set(data.windowColor);
         let sunPos = new THREE.Vector3(data.sunPosition.x, data.sunPosition.y, data.sunPosition.z);
         this.material.uniforms.sunNormal.value = sunPos.normalize();
@@ -69,6 +79,14 @@ AFRAME.registerShader('buildings', {
         if (data.wallSrc !== this.wallSrc) {
             this.loadTexture(data.wallSrc);
             this.wallSrc = data.wallSrc;
+        }
+        if (data.px !== this.px || data.nx !== this.nx || data.py !== this.py || data.nz !== this.nz) {
+            this.loadCubeTexture(data.px, data.nx, data.py, data.ny, data.nz)
+            this.px = data.px;
+            this.nx = data.nx;
+            this.py = data.py;
+            this.ny = data.ny;
+            this.nz = data.nz;
         }
     },
 
@@ -86,5 +104,22 @@ AFRAME.registerShader('buildings', {
                 this.material.uniforms.useWallMap.value = true;
             });
         }
-    }
+    },
+
+    loadCubeTexture: function (px, nx, py, ny, nz) {
+        if (px?.currentSrc) {   // What should be done if some have values and some don't?
+            this.windowTexture = null;
+            this.cubeLoader = new THREE.CubeTextureLoader();
+            const cubeMap = this.cubeLoader.load([
+                px?.currentSrc, nx?.currentSrc,
+                py?.currentSrc, ny?.currentSrc,
+                nz?.currentSrc, nz?.currentSrc   // uses nz for pz
+            ], texture => {
+                this.material.uniforms.windowCube.value = this.windowTexture = texture;
+                texture.encoding = THREE.sRGBEncoding
+                this.material.uniforms.useWindowCube.value = true;
+                console.log("cube texture:", texture)
+            });
+        }
+    },
 });
