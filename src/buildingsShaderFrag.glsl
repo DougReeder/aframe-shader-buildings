@@ -40,7 +40,7 @@ void main() {
     vec4 wallPixelColor = vec4(wallTweakedColor * sunFactor, 1.);
 
 
-    vec2 uv = fract(vUv); // TODO: Multiply by tiling amount
+    vec2 uv = fract(vUv);
     vec3 sampleDir = normalize(vViewDirTangent);
 
     sampleDir *= vec3(-1., -1., 1.);

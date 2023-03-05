@@ -105,23 +105,24 @@ default: '#909090'
 the base color of walls, if `wall-src` is not set or hasn't loaded yet.
 The intensity of the color will be tweaked so each building looks a bit different.
 
+### equirectangular
+default: none
+
+reference to equirectangular image of a building interior, for faux-3D windows.
+Only images of a room that's nearly cubical will look good.
+Overrides `px`, `nx`, etc. and `window-color`
+
 ### px, nx, py, ny, nz
 default: none
 
-references to separate cubemap textures of a building interior, for faux-3D windows
-
-[comment]: <> (### equirect)
-
-[comment]: <> (default: none)
-
-[comment]: <> (reference to equirectangular image of a building interior for cubemap, for faux-3D windows.)
-
-[comment]: <> (Overrides px, etc.)
+references to separate cubemap textures of a building interior, for faux-3D windows.
+Only images of a room that's nearly cubical will look good.
+Overrides `window-color`.
 
 ### window-color
 default: '#181818'
 
-the base color of windows, if px, nx, etc. or equirect is not set or hasn't loaded yet.
+the base color of windows, if `px`, `nx`, etc. or `equirectangular` is not set or hasn't loaded yet.
 
 ### sun-position
 default: {x:-1.0, y:1.0, z:-1.0}

@@ -70,11 +70,7 @@
                 buildingEls[3].setAttribute('wall-src', '#concreteBlocks');
                 buildingEls[3].setAttribute('wall-zoom', 3.0);
                 buildingEls[3].setAttribute('wall-color', '#a0a0a0');   // light gray
-                buildingEls[3].setAttribute('px', '#px');
-                buildingEls[3].setAttribute('nx', '#nx');
-                buildingEls[3].setAttribute('py', '#py');
-                buildingEls[3].setAttribute('ny', '#ny');
-                buildingEls[3].setAttribute('nz', '#nz');
+                buildingEls[3].setAttribute('equirectangular', '#equirectangular');
 
                 buildingEls[4] = document.createElement('a-shader-buildings');
                 buildingEls[4].setAttribute('y-proportion-geometry', 5);
@@ -96,6 +92,7 @@
                 buildingEls[5].setAttribute('wall-src', '#stoneBlocks');
                 buildingEls[5].setAttribute('wall-zoom', 5.0);
                 buildingEls[5].setAttribute('wall-color', '#675342');   // brown brick
+                buildingEls[5].setAttribute('equirectangular', '#equirectangular');
 
                 for (let s=0; s<numStyles; ++s) {
                     buildingEls[s].setAttribute('elevation-geometry', 10);
@@ -186,6 +183,7 @@
         <img id="concreteBlocks" src="./assets/TexturesCom_ConcreteBlocks_New_512_albedo.jpg">
         <img id="stoneBlocks" src="./assets/TexturesCom_BrickMedievalBlocks0327_5_seamless_S_512.jpeg">
 
+        <img id="equirectangular" src="assets/reading_room_1k.jpg">
         <img id="px" src="assets/MarriottMadisonWest/px.jpg">
         <img id="nx" src="assets/MarriottMadisonWest/nx.jpg">
         <img id="py" src="assets/MarriottMadisonWest/py.jpg">

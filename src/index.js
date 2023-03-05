@@ -168,6 +168,7 @@ AFRAME.registerPrimitive('a-shader-buildings', {
         'wall-src': 'material.wallSrc',
         'wall-zoom': 'material.wallZoom',
         'wall-color': 'material.wallColor',
+        'equirectangular': 'material.equirectangular',
         'px': 'material.px',
         'nx': 'material.nx',
         'py': 'material.py',

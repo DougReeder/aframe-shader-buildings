@@ -15,6 +15,7 @@ AFRAME.registerShader('buildings', {
         wallSrc: {type: 'selector'},
         wallZoom: {type: 'number', default: 2.0, min: 0.001},
         wallColor: {type: 'color', default: '#909090'},   // off-white, like concrete
+        equirectangular: {type: 'selector'},
         px: {type: 'selector'},
         nx: {type: 'selector'},
         py: {type: 'selector'},
@@ -80,7 +81,10 @@ AFRAME.registerShader('buildings', {
             this.loadTexture(data.wallSrc);
             this.wallSrc = data.wallSrc;
         }
-        if (data.px !== this.px || data.nx !== this.nx || data.py !== this.py || data.nz !== this.nz) {
+        if (data.equirectangular && data.equirectangular !== this.equirectangular) {
+            this.loadEquirectangular(data.equirectangular);
+            this.equirectangular = data.equirectangular;
+        } else if (data.px !== this.px || data.nx !== this.nx || data.py !== this.py || data.nz !== this.nz) {
             this.loadCubeTexture(data.px, data.nx, data.py, data.ny, data.nz)
             this.px = data.px;
             this.nx = data.nx;
@@ -92,10 +96,9 @@ AFRAME.registerShader('buildings', {
 
     loadTexture: function(wallSrc) {
         if (wallSrc?.currentSrc) {
-            this.wallTexture = null;
-            this.textureLoader = new THREE.TextureLoader();
-            this.textureLoader.load(wallSrc.currentSrc, texture => {
-                this.material.uniforms.wallMap.value = this.wallTexture = texture;
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(wallSrc.currentSrc, texture => {
+                this.material.uniforms.wallMap.value = texture;
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
                 texture.repeat.set(2, 3);
@@ -106,11 +109,25 @@ AFRAME.registerShader('buildings', {
         }
     },
 
+    loadEquirectangular: function (equirectangular) {
+        if (equirectangular.currentSrc) {
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(equirectangular.currentSrc, texture => {
+                texture.mapping = THREE.EquirectangularReflectionMapping;
+                texture.encoding = THREE.sRGBEncoding;
+                const formatted = new THREE.WebGLCubeRenderTarget(texture.source.data.height, {}).fromEquirectangularTexture(AFRAME.scenes[0].renderer, texture);
+                this.material.uniforms.windowCube.value = formatted.texture;
+                this.material.uniforms.useWindowCube.value = true;
+                console.log("cube texture from equirect:", texture)
+            });
+        }
+    },
+
     loadCubeTexture: function (px, nx, py, ny, nz) {
         if (px?.currentSrc) {   // What should be done if some have values and some don't?
             this.windowTexture = null;
-            this.cubeLoader = new THREE.CubeTextureLoader();
-            const cubeMap = this.cubeLoader.load([
+            const cubeLoader = new THREE.CubeTextureLoader();
+            const cubeMap = cubeLoader.load([
                 px?.currentSrc, nx?.currentSrc,
                 py?.currentSrc, ny?.currentSrc,
                 nz?.currentSrc, nz?.currentSrc   // uses nz for pz
