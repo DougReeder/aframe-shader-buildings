@@ -1,6 +1,6 @@
 {
   "name": "aframe-shader-buildings",
-  "version": "1.2.0beta1",
+  "version": "2.0.0",
   "description": "An A-Frame WebVR component for cheaply creating thousands of boxy buildings.",
   "scripts": {
     "watch": "webpack --mode=development --watch",

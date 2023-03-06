@@ -22,7 +22,8 @@ AFRAME.registerShader('buildings', {
         ny: {type: 'selector'},
         // positive Z is never used - it's the window side of the cube
         nz: {type: 'selector'},
-        windowColor: {type: 'color', default: '#181818'},   // dark gray, like tinted windows
+        windowColor: {type: 'color', default: 'black'},   // like tinted windows
+        windowOpacity: {default: 0.5, min: 0, max: 1},
         sunPosition: {type: 'vec3', default: {x:-1.0, y:1.0, z:-1.0}}
     },
 
@@ -46,6 +47,7 @@ AFRAME.registerShader('buildings', {
             useWindowCube: {value: false},
             windowCube: {value: null},
             windowColor: {value: new THREE.Color(data.windowColor)},
+            windowOpacity: {value: data.windowOpacity},
             sunNormal: {value: sunPos.normalize()}
         }
 
@@ -74,6 +76,7 @@ AFRAME.registerShader('buildings', {
         // useWindowCube isn't updated from data
         // windowCube must be asynchronously loaded
         this.material.uniforms.windowColor.value.set(data.windowColor);
+        this.material.uniforms.windowOpacity.value = data.windowOpacity;
         let sunPos = new THREE.Vector3(data.sunPosition.x, data.sunPosition.y, data.sunPosition.z);
         this.material.uniforms.sunNormal.value = sunPos.normalize();
 
@@ -118,7 +121,7 @@ AFRAME.registerShader('buildings', {
                 const formatted = new THREE.WebGLCubeRenderTarget(texture.source.data.height, {}).fromEquirectangularTexture(AFRAME.scenes[0].renderer, texture);
                 this.material.uniforms.windowCube.value = formatted.texture;
                 this.material.uniforms.useWindowCube.value = true;
-                console.log("cube texture from equirect:", texture)
+                // console.log("cube texture from equirect:", texture)
             });
         }
     },
@@ -135,7 +138,7 @@ AFRAME.registerShader('buildings', {
                 this.material.uniforms.windowCube.value = this.windowTexture = texture;
                 texture.encoding = THREE.sRGBEncoding
                 this.material.uniforms.useWindowCube.value = true;
-                console.log("cube texture:", texture)
+                // console.log("cube texture:", texture)
             });
         }
     },

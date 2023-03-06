@@ -175,6 +175,7 @@ AFRAME.registerPrimitive('a-shader-buildings', {
         'ny': 'material.ny',
         'nz': 'material.nz',
         'window-color': 'material.windowColor',
+        'window-opacity': 'material.windowOpacity',
         'sun-position': 'material.sunPosition',
     }
 });

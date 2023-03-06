@@ -14,6 +14,7 @@ uniform vec3 wallColor;
 uniform bool useWindowCube;
 uniform samplerCube windowCube;
 uniform vec3 windowColor;
+uniform float windowOpacity;
 
 varying vec3 pos;
 varying float sunFactor;
@@ -51,7 +52,7 @@ void main() {
     float fmin = min3(abs(viewInv) - viewInv * uvPos);
     sampleDir = sampleDir * fmin + uvPos;
 
-    vec4 windowPixelColor = useWindowCube ? texture(windowCube, sampleDir) : vec4(windowColor, 1.);
+    vec4 windowPixelColor = mix(texture(windowCube, sampleDir), vec4(windowColor, 1.), windowOpacity);
 
 
     float xx1 = step(windowWidth, sin(pos.x * 2.0 * PI / xProportion - PI / 2.0));
