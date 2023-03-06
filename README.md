@@ -110,19 +110,27 @@ default: none
 
 reference to equirectangular image of a building interior, for faux-3D windows.
 Only images of a room that's nearly cubical will look good.
-Overrides `px`, `nx`, etc. and `window-color`
+Overrides `px`, `nx`, etc.
 
 ### px, nx, py, ny, nz
 default: none
 
 references to separate cubemap textures of a building interior, for faux-3D windows.
+No positive-z image is needed, as that's the window side.
 Only images of a room that's nearly cubical will look good.
-Overrides `window-color`.
+Overridden by `equirectangular`.
 
 ### window-color
-default: '#181818'
+default: 'black'
 
-the base color of windows, if `px`, `nx`, etc. or `equirectangular` is not set or hasn't loaded yet.
+the base color of windows. Mixed with the image in `equirectangular` or `px`, `nx`, etc.
+
+### window-opacity
+default: 0.5
+
+how much light the windows block.
+If neither equirectangular nor px, nx, etc. are set, should be set to about 0.9.
+Without a cubemap, this will be mixed with white.
 
 ### sun-position
 default: {x:-1.0, y:1.0, z:-1.0}
