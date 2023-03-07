@@ -4,7 +4,7 @@ aframe-shader-buildings
 An [A-Frame](https://aframe.io) [WebXR](https://webvr.info/) component for cheaply creating boxy buildings.
 Allows you to place thousands of buildings in your scene, without using up your GPU budget!
 
-![sample screenshot](sample.png)
+![sample screenshot](sample.jpg)
 
 [live example scene](https://dougreeder.github.io/aframe-shader-buildings/example.html)
 On desktop, drag to turn and use WASD keys to move. 
@@ -16,7 +16,7 @@ Usage
 
 Include using 
 ```html
-<script src="https://unpkg.com/aframe-shader-buildings@^1.1.0/dist/main.js"></script>
+<script src="https://unpkg.com/aframe-shader-buildings@^2.0.0/dist/main.js"></script>
 ```
 
 
@@ -25,7 +25,7 @@ Declaration of a single two-tiered building:
 <a-assets>
     <img id="brick" src="./assets/TexturesCom_Wall_BrickPlain1_512_albedo.jpg">
 </a-assets>
-<a-shader-buildings sun-position="-0.5 1.0 1.0" wall-src="#brick" wall-color="#675342" buildings=
+<a-shader-buildings sun-position="-0.5 1.0 1.0" wall-src="#brick" wall-color="#675342" window-opacity="0.9" buildings=
 		'[{"x":5,"z":-995,"xCoreSections":7,"xWingSections":5,"zSections":12,"zWingSections":5,"ySections":30},{"x":0,"z":-1000,"y":120,"xCoreSections":5,"xWingSections":4,"zSections":9,"zWingSections":4,"ySections":30}]'
 ></a-shader-buildings>
 ```
@@ -46,6 +46,9 @@ Typically, you'll place the buildings on a flat plateau or valley floor, which m
 (All buildings use the same value for y.)
 Placing a building on a slope requires careful planning to keep windows from being half-buried.
 
+The buildings will look much better if you set `wall-src` with a seamless square image.
+They will look better yet, if you set `equirectangular` or `px`, `nx`, etc. with the cubemap of a cubical room with all furniture against the walls.
+Such cubemaps are hard to find, so if your skills allow, you might want to model a cubical room in your favorite tool and make the cubemap yourself.
 
 Parameters 
 ---
