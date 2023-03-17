@@ -101,6 +101,7 @@ AFRAME.registerShader('buildings', {
         if (wallSrc?.currentSrc) {
             const textureLoader = new THREE.TextureLoader();
             textureLoader.load(wallSrc.currentSrc, texture => {
+                this.material.uniforms.wallMap.value?.dispose();
                 this.material.uniforms.wallMap.value = texture;
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
@@ -119,6 +120,7 @@ AFRAME.registerShader('buildings', {
                 texture.mapping = THREE.EquirectangularReflectionMapping;
                 texture.encoding = THREE.sRGBEncoding;
                 const formatted = new THREE.WebGLCubeRenderTarget(texture.source.data.height, {}).fromEquirectangularTexture(AFRAME.scenes[0].renderer, texture);
+                this.material.uniforms.windowCube.value?.dispose();
                 this.material.uniforms.windowCube.value = formatted.texture;
                 this.material.uniforms.useWindowCube.value = true;
                 // console.log("cube texture from equirect:", texture)
@@ -135,6 +137,7 @@ AFRAME.registerShader('buildings', {
                 py?.currentSrc, ny?.currentSrc,
                 nz?.currentSrc, nz?.currentSrc   // uses nz for pz
             ], texture => {
+                this.material.uniforms.windowCube.value?.dispose();
                 this.material.uniforms.windowCube.value = this.windowTexture = texture;
                 texture.encoding = THREE.sRGBEncoding
                 this.material.uniforms.useWindowCube.value = true;
